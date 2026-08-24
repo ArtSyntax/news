@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานการวิเคราะห์ UX ประสบการณ์ใช้งาน 4 เว็บไซต์ข่าวการเงินธุรกิจ</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --bg-card: #151c2c;
+            --bg-card-hover: #1e293b;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-color-highlight: rgba(59, 130, 246, 0.3);
+            
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.4);
+            --secondary: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --accent-cyan: #06b6d4;
+
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-sub: #cbd5e1;
+
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            
+            --font-prompt: 'Prompt', sans-serif;
+            --font-inter: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-prompt);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header Navigation */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 0;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .brand-logo i {
+            color: var(--primary);
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 64px 0 40px 0;
+            background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.15) 0%, rgba(11, 15, 25, 0) 70%);
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: var(--secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 16px;
+            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 850px;
+            margin: 0 auto 40px auto;
+        }
+
+        /* Key Target Websites Pills */
+        .target-sites-bar {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .site-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .site-pill:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+        }
+
+        .site-pill i {
+            color: var(--primary);
+        }
+
+        /* Main Section Wrapper */
+        section {
+            padding: 48px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-header {
+            margin-bottom: 32px;
+        }
+
+        .section-header .tag {
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-top: 8px;
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        /* Charts Container */
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 992px) {
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+        }
+
+        .chart-box h4 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* UX Scorecard Grid */
+        .scorecard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .score-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .score-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .score-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .score-badge {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: var(--font-inter);
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+        }
+
+        .score-badge.excellent { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .score-badge.good { background: rgba(59, 130, 246, 0.15); color: var(--primary); border: 1px solid rgba(59, 130, 246, 0.3); }
+        .score-badge.average { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .score-badge.poor { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); border: 1px solid rgba(244, 63, 94, 0.3); }
+
+        .score-metrics {
+            list-style: none;
+            font-size: 0.88rem;
+        }
+
+        .score-metrics li {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+        }
+
+        .score-metrics li span {
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        /* Deep Dive Cards Grid */
+        .ux-audit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .ux-audit-grid { grid-template-columns: 1fr; }
+        }
+
+        .ux-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            position: relative;
+        }
+
+        .ux-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+        }
+
+        .ux-site-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .ux-site-url {
+            font-size: 0.85rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .ux-section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            margin: 16px 0 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ux-bullet-list {
+            list-style: none;
+            font-size: 0.9rem;
+        }
+
+        .ux-bullet-list li {
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .ux-bullet-list li i {
+            margin-top: 4px;
+        }
+
+        .ux-bullet-list.pos i { color: var(--accent-green); }
+        .ux-bullet-list.neg i { color: var(--accent-rose); }
+        .ux-bullet-list.rec i { color: var(--accent-amber); }
+
+        /* Comparison Table */
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 16px;
+        }
+
+        .comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        .comp-table th {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 14px 16px;
+            color: var(--text-sub);
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .comp-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .comp-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+            color: #fff;
+        }
+
+        /* UX Recommendation Cards */
+        .rec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .rec-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            border-top: 4px solid var(--secondary);
+        }
+
+        .rec-card h4 {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rec-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            background: #070a11;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="container nav-wrapper">
+            <a href="#" class="brand-logo">
+                <i class="fa-solid fa-compass-drafting"></i>
+                <span>Thai FinNews UX Audit Report</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#overview">ภาพรวม UX</a></li>
+                <li><a href="#scorecard">คะแนน UX Audit</a></li>
+                <li><a href="#deepdive">เจาะลึก 4 เว็บไซต์</a></li>
+                <li><a href="#matrix">ตารางเปรียบเทียบ</a></li>
+                <li><a href="#recommendations">ข้อเสนอแนะ UX</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="badge">
+                <i class="fa-solid fa-microscope"></i> UX Heuristic Evaluation & Interface Analysis
+            </div>
+            <h1>รายงานการวิเคราะห์ประสบการณ์ผู้ใช้ (UX Analysis)<br>เปรียบเทียบ 4 เว็บไซต์ข่าวการเงินและธุรกิจ</h1>
+            <p>ประเมินโครงสร้างเว็บไซต์ ความสบายตาในการอ่าน (Readability) การรองรับมือถือ (Mobile Responsiveness) และผลกระทบจากโฆษณา (Ad Friction) เพื่อค้นพบแนวทางการออกแบบที่ดีที่สุด</p>
+
+            <!-- Target Websites Bar -->
+            <div class="target-sites-bar">
+                <a href="https://www.prachachat.net" target="_blank" class="site-pill">
+                    <i class="fa-solid fa-newspaper"></i> Prachachat.net
+                </a>
+                <a href="https://ceothailand.net/news/9814" target="_blank" class="site-pill">
+                    <i class="fa-solid fa-user-tie"></i> CEOThailand.net
+                </a>
+                <a href="https://www.thestorythailand.com" target="_blank" class="site-pill">
+                    <i class="fa-solid fa-bolt"></i> TheStoryThailand.com
+                </a>
+                <a href="http://www.clubhoon.com" target="_blank" class="site-pill">
+                    <i class="fa-solid fa-chart-line"></i> ClubHoon.com
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Section 1: Overview & UX Radar Chart -->
+        <section id="overview">
+            <div class="section-header">
+                <span class="tag">Section 01</span>
+                <h2>ภาพรวมและมิติการประเมิน UX (UX Benchmark Framework)</h2>
+                <p>การวิเคราะห์ด้วยเกณฑ์ UX Heuristics 6 มิติหลัก ได้แก่ ความสวยงาม, การนำทาง, การอ่านบทความ, มือถือ, ความเร็ว และประสบการณ์โฆษณา</p>
+            </div>
+
+            <div class="glass-card">
+                <div class="charts-container">
+                    <div class="chart-box">
+                        <h4><i class="fa-solid fa-chart-radar"></i> UX Radar Comparison (คะแนนมิติ UX ทั้ง 6 ด้าน)</h4>
+                        <canvas id="uxRadarChart"></canvas>
+                    </div>
+                    <div class="chart-box">
+                        <h4><i class="fa-solid fa-square-poll-vertical"></i> Overall UX Score (คะแนนรวมความพึงพอใจ)</h4>
+                        <canvas id="uxScoreBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: UX Scorecard -->
+        <section id="scorecard">
+            <div class="section-header">
+                <span class="tag">Section 02</span>
+                <h2>สรุปคะแนนการประเมิน UX (UX Scorecard)</h2>
+                <p>คะแนนสรุปความสมบูรณ์แบบด้าน UX ของแต่ละเว็บไซต์ (เต็ม 10 คะแนน)</p>
+            </div>
+
+            <div class="scorecard-grid">
+                <!-- Prachachat Scorecard -->
+                <div class="score-card">
+                    <div class="score-header">
+                        <div class="score-title">Prachachat.net</div>
+                        <div class="score-badge average">6.5 / 10</div>
+                    </div>
+                    <ul class="score-metrics">
+                        <li>เนื้อหาเข้มข้น น่าเชื่อถือ <span>9.0 / 10</span></li>
+                        <li>ความสวยงามและการจัดวาง <span>6.5 / 10</span></li>
+                        <li>ความสบายตาในการอ่าน <span>5.5 / 10</span></li>
+                        <li>การรบกวนของโฆษณา (Ad Free) <span>4.0 / 10</span></li>
+                        <li>ความเร็วบนมือถือ <span>6.0 / 10</span></li>
+                    </ul>
+                </div>
+
+                <!-- CEO Thailand Scorecard -->
+                <div class="score-card">
+                    <div class="score-header">
+                        <div class="score-title">CEOThailand.net</div>
+                        <div class="score-badge good">7.5 / 10</div>
+                    </div>
+                    <ul class="score-metrics">
+                        <li>เนื้อหาเข้มข้น บทสัมภาษณ์ <span>7.5 / 10</span></li>
+                        <li>ความสวยงามและการจัดวาง <span>7.5 / 10</span></li>
+                        <li>ความสบายตาในการอ่าน <span>8.0 / 10</span></li>
+                        <li>การรบกวนของโฆษณา (Ad Free) <span>7.5 / 10</span></li>
+                        <li>ความเร็วบนมือถือ <span>7.0 / 10</span></li>
+                    </ul>
+                </div>
+
+                <!-- The Story Thailand Scorecard -->
+                <div class="score-card">
+                    <div class="score-header">
+                        <div class="score-title">TheStoryThailand.com</div>
+                        <div class="score-badge excellent">8.8 / 10</div>
+                    </div>
+                    <ul class="score-metrics">
+                        <li>เนื้อหาเทคโนโลยี/ความยั่งยืน <span>8.5 / 10</span></li>
+                        <li>ความสวยงามและการจัดวาง <span>9.0 / 10</span></li>
+                        <li>ความสบายตาในการอ่าน <span>9.2 / 10</span></li>
+                        <li>การรบกวนของโฆษณา (Ad Free) <span>9.0 / 10</span></li>
+                        <li>ความเร็วบนมือถือ <span>8.5 / 10</span></li>
+                    </ul>
+                </div>
+
+                <!-- ClubHoon Scorecard -->
+                <div class="score-card">
+                    <div class="score-header">
+                        <div class="score-title">ClubHoon.com</div>
+                        <div class="score-badge poor">5.5 / 10</div>
+                    </div>
+                    <ul class="score-metrics">
+                        <li>ความสดใหม่ข่าวหุ้นเรียลไทม์ <span>7.5 / 10</span></li>
+                        <li>ความสวยงามและการจัดวาง <span>4.5 / 10</span></li>
+                        <li>ความสบายตาในการอ่าน <span>5.0 / 10</span></li>
+                        <li>การรบกวนของโฆษณา (Ad Free) <span>5.5 / 10</span></li>
+                        <li>การรองรับมือถือ (Responsive) <span>4.5 / 10</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Deep-Dive UX Audits for 4 Websites -->
+        <section id="deepdive">
+            <div class="section-header">
+                <span class="tag">Section 03</span>
+                <h2>การเจาะลึก UX แต่ละเว็บไซต์ (In-depth UX Audit)</h2>
+                <p>การวิเคราะห์จุดเด่น (Pros) จุดด้อย (Cons) และอุปสรรคในการใช้งาน (UX Friction Points)</p>
+            </div>
+
+            <div class="ux-audit-grid">
+                <!-- 1. Prachachat -->
+                <div class="ux-card">
+                    <div class="ux-card-header">
+                        <div>
+                            <div class="ux-site-name">1. ประชาชาติธุรกิจ (Prachachat.net)</div>
+                            <a href="https://www.prachachat.net" target="_blank" class="ux-site-url">www.prachachat.net <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
+                        <span class="score-badge average">6.5 / 10</span>
+                    </div>
+                    
+                    <div class="ux-section-title"><i class="fa-solid fa-thumbs-up" style="color: var(--accent-green);"></i> จุดแข็งด้าน UX (UX Pros)</div>
+                    <ul class="ux-bullet-list pos">
+                        <li><i class="fa-solid fa-circle-check"></i> โครงสร้างหมวดหมู่ชัดเจน (การเมือง, เศรษฐกิจ, การเงิน, อสังหาฯ) ค้นหาง่าย</li>
+                        <li><i class="fa-solid fa-circle-check"></i> มีระบบการจัดกลุ่มข่าวเกาะติดประเด็นร้อน (Hot Issues) เด่นชัด</li>
+                        <li><i class="fa-solid fa-circle-check"></i> ข่าวสารความน่าเชื่อถือสูงในสไตล์สำนักข่าวใหญ่ดั้งเดิม</li>
+                    </ul>
+
+                    <div class="ux-section-title"><i class="fa-solid fa-thumbs-down" style="color: var(--accent-rose);"></i> จุดอ่อนและอุปสรรค UX (UX Cons & Friction)</div>
+                    <ul class="ux-bullet-list neg">
+                        <li><i class="fa-solid fa-circle-xmark"></i> **Ad Clutter ขั้นรุนแรง:** มีแบนเนอร์โฆษณาแทรกถี่เกินไป ป๊อบอัพเด้งบนมือถือรบกวนการอ่าน</li>
+                        <li><i class="fa-solid fa-circle-xmark"></i> **Layout Shift (CLS):** หน้าเว็บขยับขึ้นลงขณะโหลดโฆษณาแบบ Asynchronous ทำให้กดผิดบ่อย</li>
+                        <li><i class="fa-solid fa-circle-xmark"></i> **Text-Heavy:** บทความยาวติดกันเป็นตับ ขาดการใช้อินโฟกราฟิกหรือสรุปสั้น 3 บรรทัด</li>
+                    </ul>
+                </div>
+
+                <!-- 2. CEO Thailand -->
+                <div class="ux-card">
+                    <div class="ux-card-header">
+                        <div>
+                            <div class="ux-site-name">2. CEO Thailand (CEOThailand.net)</div>
+                            <a href="https://ceothailand.net/news/9814" target="_blank" class="ux-site-url">ceothailand.net <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
+                        <span class="score-badge good">7.5 / 10</span>
+                    </div>
+                    
+                    <div class="ux-section-title"><i class="fa-solid fa-thumbs-up" style="color: var(--accent-green);"></i> จุดแข็งด้าน UX (UX Pros)</div>
+                    <ul class="ux-bullet-list pos">
+                        <li><i class="fa-solid fa-circle-check"></i> เลเอาต์สะอาด สไตล์นิตยสารธุรกิจ (Corporate Magazine)</li>
+                        <li><i class="fa-solid fa-circle-check"></i> ภาพหน้าปกบทความ (Featured Image) ขนาดใหญ่ โดดเด่น ดึงดูดสายตา</li>
+                        <li><i class="fa-solid fa-circle-check"></i> ตัวหนังสือมีขนาดใหญ่ ระยะห่างบรรทัดดี (Line Height) อ่านสบายตา</li>
+                    </ul>
+
+                    <div class="ux-section-title"><i class="fa-solid fa-thumbs-down" style="color: var(--accent-rose);"></i> จุดอ่อนและอุปสรรค UX (UX Cons & Friction)</div>
+                    <ul class="ux-bullet-list neg">
+                        <li><i class="fa-solid fa-circle-xmark"></i> **ขาดการมีส่วนร่วม (Low Interactivity):** หน้าเว็บเป็นบทความนิ่งๆ ขาดวิดเจ็ตโต้ตอบ</li>
+                        <li><i class="fa-solid fa-circle-xmark"></i> **ไม่มีสรุปประเด็น (No Executive Summary):** ไม่มี Bullet Point ให้ผู้บริหารอ่านสรุปไว</li>
+                        <li><i class="fa-solid fa-circle-xmark"></i> **การค้นหาข่าวเก่าค่อนข้างซ้ำซ้อน:** เมนูนำทางยังมีตัวเลือกน้อย</li>
+                    </ul>
+                </div>
+
+                <!-- 3. The Story Thailand -->
+                <div class="ux-card">
+                    <div class="ux-card-header">
+                        <div>
+                            <div class="ux-site-name">3. The Story Thailand (TheStoryThailand.com)</div>
+                            <a href="https://www.thestorythailand.com" target="_blank" class="ux-site-url">www.thestorythailand.com <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
+                        <span class="score-badge excellent">8.8 / 10</span>
+                    </div>
+                    
+                    <div class="ux-section-title"><i class="fa-solid fa-thumbs-up" style="color: var(--accent-green);"></i> จุดแข็งด้าน UX (UX Pros)</div>
+                    <ul class="ux-bullet-list pos">
+                        <li><i class="fa-solid fa-circle-check"></i> **UI/UX ทันสมัยที่สุด:** ดีไซน์การ์ดโค้งมน โทนสีสะอาด ทันสมัยสไตล์ Modern Tech Media</li>
+                        <li><i class="fa-solid fa-circle-check"></i> **Zero Ad Noise:** ไม่มีโฆษณาป๊อบอัพหรือแบนเนอร์รกสายตา ทำให้โฟกัสอ่านเนื้อหาได้เต็มที่</li>
+                        <li><i class="fa-solid fa-circle-check"></i> **Mobile First Performance:** แสดงผลบนมือถือลื่นไหล โหลดรวดเร็ว ปรับขนาดตัวอักษรสมบูรณ์แบบ</li>
+                    </ul>
+
+                    <div class="ux-section-title"><i class="fa-solid fa-thumbs-down" style="color: var(--accent-rose);"></i> จุดอ่อนและอุปสรรค UX (UX Cons & Friction)</div>
+                    <ul class="ux-bullet-list neg">
+                        <li><i class="fa-solid fa-circle-xmark"></i> **ความหนาแน่นข่าวต่ำ:** เน้นบทความสัมภาษณ์ยาว ขาดระบบรายงานข่าวด่วนเรียลไทม์</li>
+                        <li><i class="fa-solid fa-circle-xmark"></i> **ไม่มีข้อมูลตัวเลขหุ้น/การเงินสด:** ขาดวิดเจ็ตข้อมูลการเงินโต้ตอบได้</li>
+                    </ul>
+                </div>
+
+                <!-- 4. ClubHoon -->
+                <div class="ux-card">
+                    <div class="ux-card-header">
+                        <div>
+                            <div class="ux-site-name">4. ClubHoon (ClubHoon.com)</div>
+                            <a href="http://www.clubhoon.com" target="_blank" class="ux-site-url">www.clubhoon.com <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
+                        <span class="score-badge poor">5.5 / 10</span>
+                    </div>
+                    
+                    <div class="ux-section-title"><i class="fa-solid fa-thumbs-up" style="color: var(--accent-green);"></i> จุดแข็งด้าน UX (UX Pros)</div>
+                    <ul class="ux-bullet-list pos">
+                        <li><i class="fa-solid fa-circle-check"></i> ข้อมูลข่าวหุ้นรวดเร็ว โดนใจนักเทรดเก็งกำไรรายวัน (Day Traders)</li>
+                        <li><i class="fa-solid fa-circle-check"></i> มีไฮไลต์ชื่อหุ้น ตัวเลขราคา และคำแนะนำโบรกเกอร์กระชับ</li>
+                    </ul>
+
+                    <div class="ux-section-title"><i class="fa-solid fa-thumbs-down" style="color: var(--accent-rose);"></i> จุดอ่อนและอุปสรรค UX (UX Cons & Friction)</div>
+                    <ul class="ux-bullet-list neg">
+                        <li><i class="fa-solid fa-circle-xmark"></i> **ดีไซน์ยุค Web 2.0:** เลเอาต์ตารางแบบเก่า ไม่รองรับการย่อขยายบนมือถือ (Responsive ล้มเหลว)</li>
+                        <li><i class="fa-solid fa-circle-xmark"></i> **Cognitive Overload:** ตัวหนังสือติดกันแน่นปึ้ก ขาดสเปซ ขาดภาพประกอบ ทำให้อ่านยากอย่างมาก</li>
+                        <li><i class="fa-solid fa-circle-xmark"></i> **Tap Targets ขนาดเล็ก:** ปุ่มกดและลิงก์บนมือถือเล็กลัดกดผิดได้ง่าย</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: UX Comparison Matrix -->
+        <section id="matrix">
+            <div class="section-header">
+                <span class="tag">Section 04</span>
+                <h2>ตารางเปรียบเทียบคุณสมบัติ UX (UX Feature Matrix)</h2>
+                <p>การเปรียบเทียบในมุมมองนักออกแบบประสบการณ์ผู้ใช้ (UX Designer Perspective)</p>
+            </div>
+
+            <div class="glass-card">
+                <div class="table-responsive">
+                    <table class="comp-table">
+                        <thead>
+                            <tr>
+                                <th>คุณสมบัติ UX</th>
+                                <th>Prachachat.net</th>
+                                <th>CEOThailand.net</th>
+                                <th>TheStoryThailand.com</th>
+                                <th>ClubHoon.com</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>สไตล์ดีไซน์หลัก (Design Archetype)</strong></td>
+                                <td>Traditional News Portal</td>
+                                <td>Corporate Magazine</td>
+                                <td>Modern Tech Media</td>
+                                <td>Classic Stock Forum/Grid</td>
+                            </tr>
+                            <tr>
+                                <td><strong>การรองรับมือถือ (Mobile UX)</strong></td>
+                                <td>ปานกลาง (มีโฆษณาเกะกะ)</td>
+                                <td>ดี (อ่านง่าย สบายตา)</td>
+                                <td>ดีเยี่ยม (Fast & Clean)</td>
+                                <td>ต้องปรับปรุง (Non-responsive table)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ระดับโฆษณาก่อกวน (Ad Friction)</strong></td>
+                                <td><span style="color: var(--accent-rose);">สูงมาก (High Friction)</span></td>
+                                <td><span style="color: var(--accent-amber);">ปานกลาง</span></td>
+                                <td><span style="color: var(--accent-green);">ต่ำมาก (Zero Ad Noise)</span></td>
+                                <td><span style="color: var(--accent-amber);">ปานกลาง</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>ความสบายตา (Readability)</strong></td>
+                                <td>ตัวหนังสือแน่น มีโฆษณาแทรก</td>
+                                <td>ตัวหนังสือใหญ่ อ่านสบาย</td>
+                                <td>ดีเยี่ยม สเปซดี สีกราฟิกสวย</td>
+                                <td>ตัวหนังสือเล็ก แน่นเป็นตาราง</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ระบบสรุปประเด็น (Summary Box)</strong></td>
+                                <td>ไม่มี (เน้นบทความยาว)</td>
+                                <td>ไม่มี</td>
+                                <td>มีสรุปในย่อหน้าแรก</td>
+                                <td>เน้นพาดหัวสั้น ข้อมูลตาราง</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ความเร็วในการโหลด (Load Performance)</strong></td>
+                                <td>ช้ากว่าปกติ (แบนเนอร์เยอะ)</td>
+                                <td>ปานกลาง</td>
+                                <td>เร็วมาก (Optimized)</td>
+                                <td>ปานกลาง</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Strategic UX Recommendations -->
+        <section id="recommendations">
+            <div class="section-header">
+                <span class="tag">Section 05</span>
+                <h2>ข้อเสนอแนะในการสร้าง UX เว็บไซต์ข่าวการเงินยุคใหม่</h2>
+                <p>บทสรุปเพื่อนำไปประยุกต์ใช้ในการสร้างแพลตฟอร์มข่าวการเงินที่ชนะใจผู้อ่าน</p>
+            </div>
+
+            <div class="rec-grid">
+                <div class="rec-card">
+                    <h4><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--secondary);"></i> 1. นำสไตล์ TheStoryThailand มาผสมความเร็วข่าว</h4>
+                    <p>ใช้เลเอาต์การ์ดที่สะอาด โมเดิร์น ไม่มีโฆษณาป๊อบอัพแบบ TheStoryThailand แต่เติมระบบรายงานข่าวหุ้นด่วนรายนาทีแบบ ClubHoon</p>
+                </div>
+
+                <div class="rec-card">
+                    <h4><i class="fa-solid fa-list-check" style="color: var(--accent-green);"></i> 2. เพิ่ม AI Executive Summary Box</h4>
+                    <p>แก้จุดอ่อนบทความยาวของ Prachachat และ CEOThailand ด้วยการใส่กล่องสรุปประเด็น 3 บรรทัดด้วย AI ที่ด้านบนสุดของบทความทุกชิ้น</p>
+                </div>
+
+                <div class="rec-card">
+                    <h4><i class="fa-solid fa-gauge-high" style="color: var(--primary);"></i> 3. ขจัดปัญหา Ad Fatigue & CLS</h4>
+                    <p>ออกแบบการจัดวางโฆษณาให้มีขนาดคงที่ (Fixed Aspect Ratio) ป้องกันการขยับของหน้าเว็บขณะโหลด และหลีกเลี่ยงการใช้โฆษณา Pop-up บนมือถือ</p>
+                </div>
+
+                <div class="rec-card">
+                    <h4><i class="fa-solid fa-table-columns" style="color: var(--accent-amber);"></i> 4. Responsive Interactive Data Table</h4>
+                    <p>ยกระดับตารางข้อมูลหุ้นจากแบบเดิมของ ClubHoon ให้เป็น Responsive Card Table บนมือถือที่ปัดแตะเลือกดูรายละเอียดได้ง่าย</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2026 Thai Financial News UX Analysis Report. Created by Market Researcher & UX Analyst.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic for Chart.js -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // UX Radar Chart
+            const ctxRadar = document.getElementById('uxRadarChart').getContext('2d');
+            new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'ความสวยงาม (Aesthetics)',
+                        'การนำทาง (Navigation)',
+                        'การอ่าน (Readability)',
+                        'ไม่มีโฆษณาก่อกวน (Ad-Free)',
+                        'การรองรับมือถือ (Mobile UX)',
+                        'ความเร็ว (Performance)'
+                    ],
+                    datasets: [
+                        {
+                            label: 'Prachachat.net',
+                            data: [6.5, 8.5, 5.5, 4.0, 6.0, 5.5],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'CEOThailand.net',
+                            data: [7.5, 7.0, 8.0, 7.5, 7.0, 7.0],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'TheStoryThailand.com',
+                            data: [9.2, 8.5, 9.5, 9.0, 9.0, 8.8],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'ClubHoon.com',
+                            data: [4.5, 6.0, 5.0, 5.5, 4.5, 6.0],
+                            borderColor: '#ec4899',
+                            backgroundColor: 'rgba(236, 72, 153, 0.15)',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            pointLabels: { color: '#cbd5e1', font: { family: 'Prompt', size: 11 } },
+                            ticks: { display: false, backdropColor: 'transparent' },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#f8fafc', font: { family: 'Prompt' } } }
+                    }
+                }
+            });
+
+            // UX Overall Bar Chart
+            const ctxBar = document.getElementById('uxScoreBarChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['TheStoryThailand', 'CEOThailand', 'Prachachat', 'ClubHoon'],
+                    datasets: [{
+                        label: 'Overall UX Score (out of 10)',
+                        data: [8.8, 7.5, 6.5, 5.5],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(244, 63, 94, 0.8)'
+                        ],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#cbd5e1', font: { family: 'Prompt' } }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
