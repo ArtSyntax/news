@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FINSYNTAX | ข่าวการเงินอัจฉริยะ</title>
+    <meta name="description" content="FINSYNTAX - แพลตฟอร์มข่าวการเงินอัจฉริยะสำหรับนักลงทุนรุ่นใหม่ อัปเดตข่าวหุ้น เศรษฐกิจ ธุรกิจ ประกัน และ ESG แบบเรียลไทม์ พร้อม AI Copilot สรุปข่าวให้เข้าใจง่าย">
+    <meta name="keywords" content="ข่าวหุ้น, ข่าวการเงิน, ข่าวเศรษฐกิจ, ลงทุน, หุ้นไทย, หุ้นต่างประเทศ, ประกัน, ESG, FINSYNTAX, AI ข่าว">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Prompt:wght@500;600;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="./styles/globals.css">
+    <link rel="stylesheet" href="./styles/design_tokens.css">
+    <link rel="stylesheet" href="./styles/components.css">
+
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">ข้ามไปยังเนื้อหาหลัก</a>
+
+    <div class="client-shell">
+        <!-- Header -->
+        <header class="site-header" role="banner" id="site-header">
+            <div class="header-inner">
+                <a href="#/" class="logo" aria-label="FINSYNTAX หน้าหลัก">
+                    <span class="logo-icon">F</span>
+                    <span class="logo-text">
+                        FINSYNTAX
+                        <svg class="logo-sparkle" width="12" height="12" viewBox="0 0 24 24" fill="var(--color-secondary)">
+                            <path d="M12 2L14.09 8.26L20 9.27L15.55 13.97L16.91 20L12 16.9L7.09 20L8.45 13.97L4 9.27L9.91 8.26L12 2Z" />
+                        </svg>
+                    </span>
+                </a>
+                
+                <nav class="desktop-nav" aria-label="เมนูหลัก" id="desktop-nav">
+                    <!-- Nav items will be injected by app.js -->
+                </nav>
+                
+                <div class="header-actions">
+                    <button class="search-toggle" id="search-btn" aria-label="ค้นหา">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Search overlay -->
+            <div class="search-overlay" id="search-overlay" style="display: none;">
+                <div class="search-container">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="search" placeholder="ค้นหาข่าว บทวิเคราะห์ หุ้น..." class="search-input" id="search-input" />
+                    <button class="search-close" id="search-close" aria-label="ปิดการค้นหา">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="search-results-list" id="search-results-list" style="max-width: 640px; margin: 12px auto 0; max-height: 400px; overflow-y: auto; display: none;"></div>
+            </div>
+        </header>
+
+        <!-- Category Chips -->
+        <div class="category-chips" role="navigation" aria-label="หมวดหมู่ข่าว">
+            <div class="chips-scroll" id="category-chips">
+                <!-- Chips will be injected by app.js -->
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main id="main-content" class="main-content">
+            <!-- Dynamic view will be injected here -->
+        </main>
+
+        <!-- Mobile Bottom Nav -->
+        <nav class="bottom-nav" aria-label="เมนูด้านล่าง" id="bottom-nav">
+            <!-- Mobile nav items will be injected by app.js -->
+        </nav>
+
+        <!-- Drawer Overlay and Menu -->
+        <div class="drawer-overlay" id="drawer-overlay" aria-hidden="true"></div>
+        <aside class="drawer" id="drawer" role="dialog" aria-label="เมนูทั้งหมด">
+            <div class="drawer-header">
+                <a href="#/" class="logo" id="drawer-logo">
+                    <span class="logo-icon">F</span>
+                    <span class="logo-text">FINSYNTAX</span>
+                </a>
+                <button class="drawer-close" id="drawer-close-btn" aria-label="ปิดเมนู">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="drawer-search">
+                <div class="drawer-search-wrapper">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="search" placeholder="ค้นหาข่าว..." class="drawer-search-input" />
+                </div>
+            </div>
+
+            <nav class="drawer-nav" id="drawer-nav">
+                <!-- Drawer nav items will be injected by app.js -->
+            </nav>
+            <div class="drawer-footer">
+                <!-- Font Size Adjuster in Drawer Footer -->
+                <div class="drawer-font-control">
+                    <span class="drawer-font-label">ขนาดตัวหนังสือ</span>
+                    <div class="drawer-font-buttons">
+                        <button id="drawer-font-dec" class="drawer-font-btn" aria-label="ลดขนาดตัวหนังสือ">
+                            <strong>A−</strong>
+                        </button>
+                        <span id="drawer-font-indicator" class="drawer-font-indicator">100%</span>
+                        <button id="drawer-font-inc" class="drawer-font-btn" aria-label="เพิ่มขนาดตัวหนังสือ">
+                            <strong>A+</strong>
+                        </button>
+                    </div>
+                </div>
+                <p class="drawer-tagline">Decode the Market. Empower Your Wealth.</p>
+            </div>
+        </aside>
+
+        <!-- Footer -->
+        <footer class="site-footer" role="contentinfo">
+            <div class="footer-inner">
+                <!-- Brand Section -->
+                <div class="footer-brand">
+                    <a href="#/" class="footer-logo" aria-label="FINSYNTAX หน้าหลัก">
+                        <span class="logo-icon">F</span>
+                        <span class="logo-text">FINSYNTAX</span>
+                    </a>
+                    <p class="footer-tagline">
+                        Decode the Market. Empower Your Wealth.
+                    </p>
+                    <p class="footer-description">
+                        แพลตฟอร์มข่าวการเงินอัจฉริยะ สำหรับนักลงทุนรุ่นใหม่ ที่ต้องการข้อมูลแม่นยำ รวดเร็ว และเข้าใจง่าย
+                    </p>
+                </div>
+
+                <!-- Navigation -->
+                <div class="footer-nav-section">
+                    <h3 class="footer-heading">หมวดหมู่</h3>
+                    <nav class="footer-nav" aria-label="หมวดหมู่ข่าว">
+                        <a href="#/stock" class="footer-link">โลกลงทุน-หุ้น</a>
+                        <a href="#/economy" class="footer-link">เศรษฐกิจ-การเงิน</a>
+                        <a href="#/insurance" class="footer-link">ประกัน</a>
+                        <a href="#/business" class="footer-link">ธุรกิจ</a>
+                        <a href="#/sd" class="footer-link">SD+</a>
+                        <a href="#/story" class="footer-link">Story-สัมภาษณ์</a>
+                        <a href="#/pr" class="footer-link">ข่าวประชาสัมพันธ์</a>
+                        <a href="#/about-us" class="footer-link">เกี่ยวกับเรา</a>
+                    </nav>
+                </div>
+
+                <!-- Contact & Social -->
+                <div class="footer-contact">
+                    <h3 class="footer-heading">ติดตามเรา</h3>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="X (Twitter)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LINE">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 5.79 2 10.4c0 3.86 3.14 7.18 7.5 8.2-.1.32-.67 2.04-.7 2.18-.05.2.07.39.28.39.14 0 .28-.07.36-.14 1-1.35 2.7-3.62 3.34-4.32.74.07 1.48.1 2.22.1 5.52 0 10-3.79 10-8.41C22 5.79 17.52 2 12 2z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom bar -->
+            <div class="footer-bottom">
+                <p>&copy; 2026 FINSYNTAX. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">นโยบายความเป็นส่วนตัว</a>
+                    <a href="#">เงื่อนไขการใช้งาน</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+</html>
