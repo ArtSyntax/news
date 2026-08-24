@@ -163,14 +163,41 @@ const categoryChips = document.getElementById('category-chips');
 const bottomNav = document.getElementById('bottom-nav');
 const drawerNav = document.getElementById('drawer-nav');
 
+function getAppBasePath() {
+    let path = window.location.pathname;
+    if (path.startsWith('/news')) {
+        return '/news/';
+    }
+    return '/';
+}
+
+function getRouteUrl(routePath = '/') {
+    const base = getAppBasePath();
+    const cleanRoute = routePath.replace(/^\//, '');
+    return base + cleanRoute;
+}
+
+function parseRoutePath() {
+    if (window.location.hash && window.location.hash.length > 1) {
+        const hashPath = window.location.hash.replace('#', '');
+        const cleanUrl = getRouteUrl(hashPath);
+        history.replaceState(null, '', cleanUrl);
+        return hashPath.split('/').filter(Boolean);
+    }
+    
+    let path = window.location.pathname;
+    if (path.startsWith('/news')) {
+        path = path.substring(5);
+    }
+    return path.split('/').filter(Boolean);
+}
+
 // Layout Setup
 function setupShell() {
-    // 1. Desktop Nav
     desktopNav.innerHTML = NAV_ITEMS.map(item => 
-        `<a href="#${item.href === '/' ? '/' : item.href}" class="nav-link">${item.label}</a>`
+        `<a href="${getRouteUrl(item.href)}" class="nav-link">${item.label}</a>`
     ).join('');
 
-    // 2. Mobile Bottom Nav
     bottomNav.innerHTML = MOBILE_NAV_ITEMS.map(item => {
         if (item.isDrawerToggle) {
             return `<button class="bottom-nav-item drawer-trigger" aria-label="${item.label}">
@@ -178,15 +205,14 @@ function setupShell() {
                 <span class="bottom-nav-label">${item.label}</span>
             </button>`;
         }
-        return `<a href="#${item.href === '/' ? '/' : item.href}" class="bottom-nav-item">
+        return `<a href="${getRouteUrl(item.href)}" class="bottom-nav-item">
             ${ICONS[item.icon](false)}
             <span class="bottom-nav-label">${item.label}</span>
         </a>`;
     }).join('');
 
-    // 3. Drawer Nav
     drawerNav.innerHTML = NAV_ITEMS.map(item => 
-        `<a href="#${item.href === '/' ? '/' : item.href}" class="drawer-nav-link drawer-close-trigger">
+        `<a href="${getRouteUrl(item.href)}" class="drawer-nav-link drawer-close-trigger">
             <span>${item.label}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="2">
                 <polyline points="9 18 15 12 9 6"></polyline>
@@ -194,38 +220,37 @@ function setupShell() {
         </a>`
     ).join('');
 
-    // Update active states
     updateActiveNav();
 }
 
 function updateActiveNav() {
-    const path = window.location.hash.replace('#', '') || '/';
+    const parts = parseRoutePath();
+    const currentCategorySlug = parts.length > 0 ? parts[0] : '';
     
-    // Update Desktop
     Array.from(desktopNav.children).forEach(link => {
-        const href = link.getAttribute('href').replace('#', '');
-        link.className = `nav-link ${path === href ? 'active' : ''}`;
+        const href = link.getAttribute('href');
+        const isHome = currentCategorySlug === '' && (href.endsWith('/news/') || href.endsWith('/'));
+        const isMatch = isHome || (currentCategorySlug && href.endsWith('/' + currentCategorySlug));
+        link.className = `nav-link ${isMatch ? 'active' : ''}`;
     });
 
-    // Update Bottom Nav
     Array.from(bottomNav.children).forEach(link => {
         if (link.tagName === 'A') {
-            const href = link.getAttribute('href').replace('#', '');
-            const isActive = path === href;
-            // Hacky but works for updating SVG stroke:
-            const iconKey = MOBILE_NAV_ITEMS.find(i => i.href === href)?.icon;
+            const href = link.getAttribute('href');
+            const isHome = currentCategorySlug === '' && (href.endsWith('/news/') || href.endsWith('/'));
+            const isMatch = isHome || (currentCategorySlug && href.endsWith('/' + currentCategorySlug));
+            const iconKey = MOBILE_NAV_ITEMS.find(i => getRouteUrl(i.href) === href)?.icon;
             if (iconKey && ICONS[iconKey]) {
-                 link.innerHTML = ICONS[iconKey](isActive) + `<span class="bottom-nav-label">${link.querySelector('span').innerText}</span>`;
+                 link.innerHTML = ICONS[iconKey](isMatch) + `<span class="bottom-nav-label">${link.querySelector('span').innerText}</span>`;
             }
-            link.className = `bottom-nav-item ${isActive ? 'active' : ''}`;
+            link.className = `bottom-nav-item ${isMatch ? 'active' : ''}`;
         }
     });
 
-    // Update Category Chips
     categoryChips.innerHTML = `
-        <a href="#/" class="chip ${path === '/' ? 'active' : ''}">ทั้งหมด</a>
+        <a href="${getRouteUrl('/')}" class="chip ${currentCategorySlug === '' ? 'active' : ''}">ทั้งหมด</a>
         ${Object.values(CATEGORIES).map(cat => 
-            `<a href="#/${cat.slug}" class="chip ${path === `/${cat.slug}` ? 'active' : ''}">${cat.label}</a>`
+            `<a href="${getRouteUrl('/' + cat.slug)}" class="chip ${currentCategorySlug === cat.slug ? 'active' : ''}">${cat.label}</a>`
         ).join('')}
     `;
 }
@@ -284,7 +309,7 @@ function setupInteractivity() {
                 searchResultsList.innerHTML = `<div style="padding: 16px; background: white; border-radius: 8px; color: var(--color-text-muted); text-align: center; border: 1px solid var(--color-border);">ไม่พบข่าวที่ค้นหา "${query}"</div>`;
             } else {
                 searchResultsList.innerHTML = matched.map(article => `
-                    <a href="#/${article.category}/${article.slug}" class="search-result-item" style="display: flex; gap: 12px; padding: 12px; background: white; border-radius: 8px; margin-bottom: 8px; text-decoration: none; border: 1px solid var(--color-border); align-items: center; transition: transform 0.15s ease;">
+                    <a href="${getRouteUrl('/' + article.category + '/' + article.slug)}" class="search-result-item" style="display: flex; gap: 12px; padding: 12px; background: white; border-radius: 8px; margin-bottom: 8px; text-decoration: none; border: 1px solid var(--color-border); align-items: center; transition: transform 0.15s ease;">
                         <div style="width: 56px; height: 56px; border-radius: 6px; background-size: cover; background-position: center; background-image: url('${article.image || '/images/placeholder.jpg'}'); flex-shrink: 0; background-color: var(--color-bg-surface-hover);"></div>
                         <div style="flex: 1; min-width: 0;">
                             <div style="font-size: 14px; font-weight: 600; color: var(--color-text-title); margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${article.title}</div>
@@ -401,7 +426,7 @@ function renderNewsCard(article, featured = false) {
     
     return `
     <article class="news-card ${featured ? 'featured' : ''}">
-        <a href="#/${article.category}/${article.slug}" class="news-card-link" aria-label="${article.title}">
+        <a href="${getRouteUrl('/' + article.category + '/' + article.slug)}" class="news-card-link" aria-label="${article.title}">
             <div class="card-image-wrapper">
                 <div class="card-image" style="background-image: ${bgImage};" role="img" aria-label="${article.title}"></div>
                 ${category ? `<span class="badge-category ${category.badgeClass}">${category.label}</span>` : ''}
@@ -666,7 +691,7 @@ function renderRelatedCardsSection(relatedArticles) {
                 const imgSrc = a.image && (a.image.startsWith('/') || a.image.startsWith('http')) ? a.image : '/' + (a.image || 'images/placeholder.jpg');
                 
                 return `
-                <a href="#/${a.category}/${a.slug}" class="in-article-ad-box in-article-related-card" style="display: block; text-decoration: none;">
+                <a href="${getRouteUrl('/' + a.category + '/' + a.slug)}" class="in-article-ad-box in-article-related-card" style="display: block; text-decoration: none;">
                   <div class="ad-box-inner">
                     <div class="ad-box-image-wrapper">
                       <img src="${imgSrc}" alt="${a.title}" class="ad-box-img" loading="lazy" onerror="this.onerror=null; this.src='./images/placeholder.jpg';" />
@@ -701,7 +726,10 @@ function splitContentForAd(htmlContent) {
 
 async function renderArticleView(category, slug) {
     const articleMeta = articles.find(a => a.category === category && a.slug === slug);
-    if (!articleMeta) return `<div class="article-container"><h1>404 Not Found</h1></div>`;
+    if (!articleMeta) {
+        mainContent.innerHTML = render404View();
+        return;
+    }
 
     mainContent.innerHTML = `<div class="article-container"><p>กำลังโหลด...</p></div>`;
 
@@ -736,10 +764,10 @@ async function renderArticleView(category, slug) {
             <div class="article-container">
                 <!-- Breadcrumb -->
                 <nav class="breadcrumb" aria-label="เส้นทาง">
-                    <a href="#/">หน้าหลัก</a>
+                    <a href="${getRouteUrl('/')}">หน้าหลัก</a>
                     <span class="breadcrumb-separator">/</span>
                     ${categoryInfo ? `
-                        <a href="#/${articleMeta.category}">${categoryInfo.label}</a>
+                        <a href="${getRouteUrl('/' + articleMeta.category)}">${categoryInfo.label}</a>
                         <span class="breadcrumb-separator">/</span>
                     ` : ''}
                     <span class="breadcrumb-current">${articleMeta.title}</span>
@@ -842,8 +870,7 @@ async function renderStaticPage(pageName) {
 
 async function handleRoute() {
     updateActiveNav();
-    const hash = window.location.hash.replace('#', '') || '/';
-    const parts = hash.split('/').filter(Boolean);
+    const parts = parseRoutePath();
 
     window.scrollTo(0, 0);
 
@@ -861,8 +888,7 @@ async function handleRoute() {
         // Article Page
         await renderArticleView(parts[0], parts[1]);
     } else {
-        // Handle pages like /about-us (Not fully implemented, fallback to 404)
-        mainContent.innerHTML = `<div class="page-container"><h1>404 Not Found</h1></div>`;
+        mainContent.innerHTML = render404View();
     }
 }
 
@@ -924,13 +950,32 @@ function showToast(message) {
     }, 1800);
 }
 
+function render404View() {
+    return `
+        <div class="page-container" style="text-align: center; padding: 80px 20px; min-height: 50vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="font-size: 72px; font-weight: 800; color: var(--color-primary); margin-bottom: 12px; font-family: var(--font-family-heading);">404</div>
+            <h1 style="font-size: var(--text-2xl); font-weight: 700; color: var(--color-text-title); margin-bottom: 12px;">ไม่พบหน้าที่คุณต้องการ</h1>
+            <p style="color: var(--color-text-body); max-width: 480px; margin-bottom: 24px; line-height: 1.6;">
+                หน้าที่คุณกำลังค้นหาอาจถูกย้าย ลบออก หรือพิมพ์ที่อยู่ URL ไม่ถูกต้อง คุณสามารถกลับไปเริ่มต้นที่หน้าหลักได้ครับ
+            </p>
+            <a href="${getRouteUrl('/')}" class="ad-box-cta" style="align-self: center; margin: 0 auto; background: var(--color-primary); color: #FFFFFF; font-size: var(--text-base); padding: 10px 24px; text-decoration: none; border-radius: var(--radius-sm); border: none;">
+                🏠 กลับสู่หน้าหลัก
+            </a>
+        </div>
+    `;
+}
+
+function getAppRootPath() {
+    let path = window.location.pathname;
+    if (path.startsWith('/news')) {
+        return '/news/';
+    }
+    return '/';
+}
+
 function getAppPath(relativePath) {
     const cleanRelative = relativePath.replace(/^\.\//, '').replace(/^\//, '');
-    let basePath = window.location.origin + window.location.pathname;
-    if (!basePath.endsWith('/')) {
-        basePath += '/';
-    }
-    return basePath + cleanRelative;
+    return window.location.origin + getAppRootPath() + cleanRelative;
 }
 
 async function init() {
@@ -984,8 +1029,25 @@ async function init() {
         console.error("Failed to load content markdown files directly", e);
     }
 
+    // Intercept internal link clicks for History API routing
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (!link) return;
+        
+        const href = link.getAttribute('href');
+        if (!href) return;
+        
+        if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:') || href.startsWith('tel:') || href === '#menu' || href.startsWith('#drawer-') || href.startsWith('#main-content')) {
+            return;
+        }
+        
+        e.preventDefault();
+        history.pushState(null, '', href);
+        handleRoute();
+    });
+
     handleRoute();
-    window.addEventListener('hashchange', handleRoute);
+    window.addEventListener('popstate', handleRoute);
 }
 
 init();
