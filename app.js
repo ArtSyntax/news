@@ -24,6 +24,7 @@ const NAV_ITEMS = [
 const MOBILE_NAV_ITEMS = [
     { href: '/', label: 'หน้าหลัก', icon: 'home' },
     { href: '/stock', label: 'หุ้น', icon: 'chart' },
+    { href: '#random', label: 'สุ่มข่าว', icon: 'ai', isRandomToggle: true },
     { href: '/business', label: 'ธุรกิจ', icon: 'briefcase' },
     { href: '#menu', label: 'เมนู', icon: 'menu', isDrawerToggle: true },
 ];
@@ -64,6 +65,7 @@ const ICONS = {
     chart: (active) => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${active ? 'var(--color-primary)' : 'var(--color-text-muted)'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>`,
     briefcase: (active) => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${active ? 'var(--color-primary)' : 'var(--color-text-muted)'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>`,
     menu: (active) => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${active ? 'var(--color-primary)' : 'var(--color-text-muted)'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>`,
+    ai: () => `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5v2"></path><circle cx="12" cy="4.5" r="1" fill="#FFFFFF"></circle><rect x="4" y="6.5" width="16" height="13" rx="6.5" ry="6.5"></rect><rect x="6.5" y="8.5" width="11" height="8" rx="4" ry="4" fill="#FFFFFF" fill-opacity="0.25" stroke="none"></rect><path d="M8.5 12l1-1 1 1" stroke-width="2"></path><path d="M13.5 12l1-1 1 1" stroke-width="2"></path><path d="M10.5 14.5c.8.6 2.2.6 3 0" stroke-width="1.8"></path><rect x="2" y="10" width="2" height="5.5" rx="1" fill="#FFFFFF"></rect><rect x="20" y="10" width="2" height="5.5" rx="1" fill="#FFFFFF"></rect></svg>`,
     fontSizeMinus: (active) => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${active ? 'var(--color-primary)' : 'var(--color-text-muted)'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="3" y="17" font-size="14" font-family="Prompt, sans-serif" font-weight="700" fill="${active ? 'var(--color-primary)' : 'var(--color-text-muted)'}" stroke="none">A</text><line x1="14" y1="12" x2="22" y2="12" stroke-width="2.5"></line></svg>`,
     fontSizePlus: (active) => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${active ? 'var(--color-primary)' : 'var(--color-text-muted)'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="2" y="17" font-size="14" font-family="Prompt, sans-serif" font-weight="700" fill="${active ? 'var(--color-primary)' : 'var(--color-text-muted)'}" stroke="none">A</text><line x1="13" y1="12" x2="21" y2="12" stroke-width="2.5"></line><line x1="17" y1="8" x2="17" y2="16" stroke-width="2.5"></line></svg>`,
     sparkle: () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="var(--color-secondary)" stroke="none"><path d="M12 2L14.09 8.26L20 9.27L15.55 13.97L16.91 20L12 16.9L7.09 20L8.45 13.97L4 9.27L9.91 8.26L12 2Z"></path></svg>`
@@ -205,6 +207,14 @@ function setupShell() {
                 <span class="bottom-nav-label">${item.label}</span>
             </button>`;
         }
+        if (item.isRandomToggle) {
+            return `<button class="bottom-nav-item random-news-trigger" aria-label="${item.label}">
+                <div class="ai-circle-icon">
+                    ${ICONS[item.icon]()}
+                </div>
+                <span class="bottom-nav-label">${item.label}</span>
+            </button>`;
+        }
         return `<a href="${getRouteUrl(item.href)}" class="bottom-nav-item">
             ${ICONS[item.icon](false)}
             <span class="bottom-nav-label">${item.label}</span>
@@ -255,13 +265,48 @@ function updateActiveNav() {
     `;
 }
 
+function getRandomPastMonthArticle() {
+    if (!articles || articles.length === 0) return null;
+    
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
+    
+    let recentArticles = articles.filter(a => {
+        if (!a.date) return false;
+        const d = new Date(a.date);
+        return d >= thirtyDaysAgo && d <= now;
+    });
+    
+    if (recentArticles.length === 0) {
+        recentArticles = articles;
+    }
+    
+    const randomIndex = Math.floor(Math.random() * recentArticles.length);
+    return recentArticles[randomIndex];
+}
+
 // Interactivity
 function setupInteractivity() {
-    // Font Size Listeners in Drawer
     const drawerFontDec = document.getElementById('drawer-font-dec');
     const drawerFontInc = document.getElementById('drawer-font-inc');
     if (drawerFontDec) drawerFontDec.addEventListener('click', () => adjustFontSize(-1));
     if (drawerFontInc) drawerFontInc.addEventListener('click', () => adjustFontSize(1));
+
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.random-news-trigger');
+        if (!btn) return;
+        
+        const randomArticle = getRandomPastMonthArticle();
+        if (randomArticle) {
+            const url = getRouteUrl('/' + randomArticle.category + '/' + randomArticle.slug);
+            history.pushState(null, '', url);
+            handleRoute();
+            scrollToTop();
+            showToast(`🎲 สุ่มข่าว: ${randomArticle.title.substring(0, 24)}...`);
+        } else {
+            showToast('ไม่พบข่าวสำหรับสุ่ม');
+        }
+    });
 
     // Header Scroll
     window.addEventListener('scroll', () => {

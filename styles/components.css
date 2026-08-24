@@ -347,6 +347,46 @@
   transition: color 0.2s ease;
 }
 
+/* AI Random News Circle Button on Mobile Nav */
+.bottom-nav-item.random-news-trigger {
+  margin-top: -18px;
+  position: relative;
+  z-index: 10;
+}
+
+.ai-circle-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #059669 0%, #3B82F6 50%, #8B5CF6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+  border: 2px solid #FFFFFF;
+  padding: 0;
+  margin: 0;
+}
+
+.ai-circle-icon svg {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+.bottom-nav-item.random-news-trigger:active .ai-circle-icon {
+  transform: scale(0.92);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.random-news-trigger .bottom-nav-label {
+  font-weight: 600;
+  background: linear-gradient(135deg, #059669 0%, #3B82F6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 /* Font Size Action Buttons & Toast */
 .font-size-btn:active {
   transform: scale(0.92);
