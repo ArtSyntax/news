@@ -837,9 +837,11 @@ async function renderArticleView(category, slug) {
                 ${tagsHtml}
             </div>
         </article>`;
+        scrollToTop();
     } catch (e) {
         console.error(e);
         mainContent.innerHTML = `<div class="article-container"><h1>ไม่สามารถโหลดเนื้อหาได้</h1></div>`;
+        scrollToTop();
     }
 }
 
@@ -864,32 +866,44 @@ async function renderStaticPage(pageName) {
         <div class="page-container" style="padding-top: var(--spacing-xl); padding-bottom: var(--spacing-xl);">
             <div class="article-content">${htmlContent}</div>
         </div>`;
+        scrollToTop();
     } catch (e) {
         mainContent.innerHTML = `<div class="page-container"><h1>ไม่สามารถโหลดเนื้อหาได้</h1></div>`;
     }
+}
+
+function scrollToTop() {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
 }
 
 async function handleRoute() {
     updateActiveNav();
     const parts = parseRoutePath();
 
-    window.scrollTo(0, 0);
+    scrollToTop();
 
     if (parts.length === 0) {
         // Home
         mainContent.innerHTML = renderHomeView(articles);
+        scrollToTop();
     } else if (parts.length === 1 && CATEGORIES[parts[0]]) {
         // Category Page
         const categoryArticles = articles.filter(a => a.category === parts[0]);
         mainContent.innerHTML = renderHomeView(categoryArticles, parts[0]);
+        scrollToTop();
     } else if (parts.length === 1 && parts[0] === 'about-us') {
         // Static Page
         await renderStaticPage(parts[0]);
+        scrollToTop();
     } else if (parts.length === 2 && CATEGORIES[parts[0]]) {
         // Article Page
         await renderArticleView(parts[0], parts[1]);
+        scrollToTop();
     } else {
         mainContent.innerHTML = render404View();
+        scrollToTop();
     }
 }
 
@@ -1056,10 +1070,14 @@ async function init() {
         e.preventDefault();
         history.pushState(null, '', href);
         handleRoute();
+        scrollToTop();
     });
 
     handleRoute();
-    window.addEventListener('popstate', handleRoute);
+    window.addEventListener('popstate', () => {
+        handleRoute();
+        scrollToTop();
+    });
 }
 
 init();
