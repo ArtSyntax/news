@@ -446,12 +446,13 @@ function renderNewsCard(article, featured = false) {
     </article>`;
 }
 
-function renderNativeAdCard(title, sponsor, readTime, index) {
+function renderNativeAdCard(title, sponsor, readTime, image) {
+    const bgImage = image ? `url('${getImageUrl(image)}')` : `url('${getImageUrl('images/placeholder.jpg')}')`;
     return `
     <article class="news-card native-ad">
         <div class="news-card-link">
             <div class="card-image-wrapper">
-                <div class="card-image" style="background-image: linear-gradient(135deg, rgba(245,158,11,0.1) 0%, var(--color-bg-surface) 100%);" role="img" aria-label="${title}"></div>
+                <div class="card-image" style="background-image: ${bgImage};" role="img" aria-label="${title}"></div>
                 <span class="badge-category badge-sponsored">Sponsored</span>
             </div>
             <div class="card-content">
