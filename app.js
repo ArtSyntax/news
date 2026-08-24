@@ -706,7 +706,7 @@ async function renderArticleView(category, slug) {
     mainContent.innerHTML = `<div class="article-container"><p>กำลังโหลด...</p></div>`;
 
     try {
-        const response = await fetch(`./content/news/${category}/${articleMeta.fileName}`);
+        const response = await fetch(getAppPath(`content/news/${category}/${articleMeta.fileName}`));
         if (!response.ok) throw new Error('Failed to load markdown');
         const markdown = await response.text();
         
@@ -818,7 +818,7 @@ async function renderArticleView(category, slug) {
 async function renderStaticPage(pageName) {
     mainContent.innerHTML = `<div class="page-container"><p>กำลังโหลด...</p></div>`;
     try {
-        const response = await fetch(`./content/pages/${pageName}.md`);
+        const response = await fetch(getAppPath(`content/pages/${pageName}.md`));
         if (!response.ok) throw new Error('Failed to load markdown');
         const markdown = await response.text();
         
@@ -924,6 +924,15 @@ function showToast(message) {
     }, 1800);
 }
 
+function getAppPath(relativePath) {
+    const cleanRelative = relativePath.replace(/^\.\//, '').replace(/^\//, '');
+    let basePath = window.location.origin + window.location.pathname;
+    if (!basePath.endsWith('/')) {
+        basePath += '/';
+    }
+    return basePath + cleanRelative;
+}
+
 async function init() {
     initFontSize();
     setupShell();
@@ -932,12 +941,12 @@ async function init() {
     try {
         const [articleResults, sponsorResults] = await Promise.all([
             Promise.all(ARTICLE_FILES.map(file => 
-                fetch('./' + file)
+                fetch(getAppPath(file))
                     .then(r => r.ok ? r.text() : '')
                     .then(text => ({ file, text }))
             )),
             Promise.all(SPONSOR_FILES.map(file => 
-                fetch('./' + file)
+                fetch(getAppPath(file))
                     .then(r => r.ok ? r.text() : '')
                     .then(text => ({ file, text }))
             ))
