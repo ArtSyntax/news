@@ -784,6 +784,7 @@
 .badge-insurance,
 .badge-sd,
 .badge-story,
+.badge-lifestyle,
 .badge-pr,
 .badge-sponsored {
   background: rgba(15, 23, 42, 0.68);
@@ -1015,7 +1016,7 @@
   background: #b45309;
 }
 
-/* In-Article Related News Stack (Partner Insight Card Style) */
+/* In-Article Related News Stack (Sponsored Card Style) */
 .in-article-related-container {
   margin: var(--space-4) 0;
   display: flex;

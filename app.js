@@ -6,6 +6,7 @@ const CATEGORIES = {
     business: { slug: 'business', label: 'ธุรกิจ', badgeClass: 'badge-business', icon: '💼', navIcon: 'briefcase' },
     sd: { slug: 'sd', label: 'ความยั่งยืน SD+', badgeClass: 'badge-sd', icon: '🌱', navIcon: 'leaf' },
     story: { slug: 'story', label: 'สัมภาษณ์พิเศษ', badgeClass: 'badge-story', icon: '🎙️', navIcon: 'mic' },
+    lifestyle: { slug: 'lifestyle', label: 'ไลฟ์สไตล์', badgeClass: 'badge-lifestyle', icon: '✨', navIcon: 'sparkle' },
     pr: { slug: 'pr', label: 'ข่าวประชาสัมพันธ์', badgeClass: 'badge-pr', icon: '📢', navIcon: 'megaphone' },
 };
 
@@ -17,6 +18,7 @@ const NAV_ITEMS = [
     { href: '/business', label: 'ธุรกิจ' },
     { href: '/sd', label: 'ความยั่งยืน SD+' },
     { href: '/story', label: 'สัมภาษณ์พิเศษ' },
+    { href: '/lifestyle', label: 'ไลฟ์สไตล์' },
     { href: '/pr', label: 'ข่าวประชาสัมพันธ์' },
     { href: '/about-us', label: 'เกี่ยวกับเรา' },
 ];
@@ -85,6 +87,7 @@ const ARTICLE_FILES = [
     'content/news/sd/20260824_green-bond-issuance.md',
     'content/news/story/20260819_ceo-interview-fintech.md',
     'content/news/story/20260822_succession-family-business.md',
+    'content/news/lifestyle/20260824_work-life-wealth.md',
     'content/news/pr/20260820_bank-new-app-launch.md',
     'content/news/pr/20260823_property-developer-award.md'
 ];
@@ -164,6 +167,7 @@ const desktopNav = document.getElementById('desktop-nav');
 const categoryChips = document.getElementById('category-chips');
 const bottomNav = document.getElementById('bottom-nav');
 const drawerNav = document.getElementById('drawer-nav');
+const footerNav = document.getElementById('footer-nav');
 
 function getAppBasePath() {
     let path = window.location.pathname;
@@ -235,6 +239,12 @@ function setupShell() {
             </svg>
         </a>`
     ).join('');
+
+    if (footerNav) {
+        footerNav.innerHTML = NAV_ITEMS.filter(item => item.href !== '/').map(item => 
+            `<a href="${getRouteUrl(item.href)}" class="footer-link">${item.label}</a>`
+        ).join('');
+    }
 
     updateActiveNav();
 }
@@ -672,7 +682,7 @@ function renderNativeAdBox(
         </div>
         <div class="ad-box-content">
           <div class="ad-box-header">
-            <span class="ad-box-label">Partner Insight</span>
+            <span class="ad-box-label">Sponsored</span>
             <span class="ad-box-sponsor">สนับสนุนโดย ${sponsor}</span>
           </div>
           <h4 class="ad-box-title">${title}</h4>
