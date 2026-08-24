@@ -180,6 +180,12 @@ function getRouteUrl(routePath = '/') {
 }
 
 function parseRoutePath() {
+    if (window.__REDIRECTED_PATH__) {
+        const redirectedPath = window.__REDIRECTED_PATH__;
+        delete window.__REDIRECTED_PATH__;
+        history.replaceState(null, '', redirectedPath);
+    }
+
     if (window.location.hash && window.location.hash.length > 1) {
         const hashPath = window.location.hash.replace('#', '');
         const cleanUrl = getRouteUrl(hashPath);
