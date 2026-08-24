@@ -1287,14 +1287,15 @@
 
 .article-body th,
 .article-content th {
-  background: #F1F5F9;
-  color: var(--color-text-title);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #FFFFFF;
   font-family: var(--font-family-heading);
   font-size: var(--text-sm);
   font-weight: var(--font-weight-semibold);
   text-align: left;
   padding: var(--space-3) var(--space-4);
-  border-bottom: 2px solid var(--color-border);
+  border-bottom: 2px solid #047857;
+  letter-spacing: 0.02em;
 }
 
 .article-body td,
@@ -1319,7 +1320,44 @@
 
 .article-body tr:hover,
 .article-content tr:hover {
-  background-color: #F1F5F9;
+  background-color: rgba(5, 150, 105, 0.07);
+}
+
+/* Sponsor Table CI Tier Badges */
+.badge-tier {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-family-heading);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.badge-tier.tier-gold {
+  background: rgba(217, 119, 6, 0.12);
+  color: #D97706;
+  border: 1px solid rgba(217, 119, 6, 0.3);
+}
+
+.badge-tier.tier-emerald {
+  background: rgba(5, 150, 105, 0.12);
+  color: #059669;
+  border: 1px solid rgba(5, 150, 105, 0.3);
+}
+
+.badge-tier.tier-indigo {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4F46E5;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.badge-tier.tier-cyan {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284C7;
+  border: 1px solid rgba(2, 132, 199, 0.3);
 }
 
 .article-body ul,
