@@ -310,7 +310,7 @@ function setupInteractivity() {
             } else {
                 searchResultsList.innerHTML = matched.map(article => `
                     <a href="${getRouteUrl('/' + article.category + '/' + article.slug)}" class="search-result-item" style="display: flex; gap: 12px; padding: 12px; background: white; border-radius: 8px; margin-bottom: 8px; text-decoration: none; border: 1px solid var(--color-border); align-items: center; transition: transform 0.15s ease;">
-                        <div style="width: 56px; height: 56px; border-radius: 6px; background-size: cover; background-position: center; background-image: url('${article.image || '/images/placeholder.jpg'}'); flex-shrink: 0; background-color: var(--color-bg-surface-hover);"></div>
+                        <div style="width: 56px; height: 56px; border-radius: 6px; background-size: cover; background-position: center; background-image: url('${getImageUrl(article.image || 'images/placeholder.jpg')}'); flex-shrink: 0; background-color: var(--color-bg-surface-hover);"></div>
                         <div style="flex: 1; min-width: 0;">
                             <div style="font-size: 14px; font-weight: 600; color: var(--color-text-title); margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${article.title}</div>
                             <div style="font-size: 12px; color: var(--color-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${article.excerpt || ''}</div>
@@ -422,7 +422,7 @@ function setupInteractivity() {
 function renderNewsCard(article, featured = false) {
     const category = getCategoryBySlug(article.category);
     const sentiment = getSentimentInfo(article.sentiment);
-    const bgImage = article.image ? `url(${article.image})` : 'linear-gradient(135deg, var(--color-bg-surface) 0%, var(--color-bg-surface-hover) 100%)';
+    const bgImage = article.image ? `url('${getImageUrl(article.image)}')` : 'linear-gradient(135deg, var(--color-bg-surface) 0%, var(--color-bg-surface-hover) 100%)';
     
     return `
     <article class="news-card ${featured ? 'featured' : ''}">
@@ -608,15 +608,15 @@ function renderNativeAdBox(
   description = 'เปรียบเทียบประกันชีวิตสะสมทรัพย์ ผลตอบแทนสูงสุด 3.5% ต่อปี กับแผนที่ใช่สำหรับคุณ',
   sponsor = 'เมืองไทยประกันชีวิต',
   ctaText = 'ดูรายละเอียด',
-  image = '/images/placeholder.jpg'
+  image = 'images/placeholder.jpg'
 ) {
-  const imgSrc = image && (image.startsWith('/') || image.startsWith('http')) ? image : '/' + (image || 'images/placeholder.jpg');
+  const imgSrc = getImageUrl(image);
 
   return `
     <aside class="in-article-ad-box" aria-label="เนื้อหาสนับสนุน">
       <div class="ad-box-inner">
         <div class="ad-box-image-wrapper">
-          <img src="${imgSrc}" alt="${title}" class="ad-box-img" loading="lazy" onerror="this.onerror=null; this.src='./images/placeholder.jpg';" />
+          <img src="${imgSrc}" alt="${title}" class="ad-box-img" loading="lazy" onerror="this.onerror=null; this.src='${getImageUrl('images/placeholder.jpg')}';" />
         </div>
         <div class="ad-box-content">
           <div class="ad-box-header">
@@ -688,13 +688,13 @@ function renderRelatedCardsSection(relatedArticles) {
         <div class="in-article-related-container">
             ${relatedArticles.map(a => {
                 const categoryInfo = getCategoryBySlug(a.category);
-                const imgSrc = a.image && (a.image.startsWith('/') || a.image.startsWith('http')) ? a.image : '/' + (a.image || 'images/placeholder.jpg');
+                const imgSrc = getImageUrl(a.image);
                 
                 return `
                 <a href="${getRouteUrl('/' + a.category + '/' + a.slug)}" class="in-article-ad-box in-article-related-card" style="display: block; text-decoration: none;">
                   <div class="ad-box-inner">
                     <div class="ad-box-image-wrapper">
-                      <img src="${imgSrc}" alt="${a.title}" class="ad-box-img" loading="lazy" onerror="this.onerror=null; this.src='./images/placeholder.jpg';" />
+                      <img src="${imgSrc}" alt="${a.title}" class="ad-box-img" loading="lazy" onerror="this.onerror=null; this.src='${getImageUrl('images/placeholder.jpg')}';" />
                     </div>
                     <div class="ad-box-content">
                       <div class="ad-box-header">
@@ -797,7 +797,7 @@ async function renderArticleView(category, slug) {
                 <!-- Article Hero Image -->
                 ${articleMeta.image ? `
                 <div class="article-hero-image">
-                    <img src="${articleMeta.image.startsWith('/') || articleMeta.image.startsWith('http') ? articleMeta.image : '/' + articleMeta.image}" alt="${articleMeta.title}" class="article-image-img" loading="eager" onerror="this.onerror=null; this.src='./images/placeholder.jpg';" />
+                    <img src="${getImageUrl(articleMeta.image)}" alt="${articleMeta.title}" class="article-image-img" loading="eager" onerror="this.onerror=null; this.src='${getImageUrl('images/placeholder.jpg')}';" />
                 </div>` : ''}
 
                 <!-- Article Body -->
@@ -976,6 +976,17 @@ function getAppRootPath() {
 function getAppPath(relativePath) {
     const cleanRelative = relativePath.replace(/^\.\//, '').replace(/^\//, '');
     return window.location.origin + getAppRootPath() + cleanRelative;
+}
+
+function getImageUrl(imgPath) {
+    if (!imgPath) {
+        return getAppPath('images/placeholder.jpg');
+    }
+    if (imgPath.startsWith('http://') || imgPath.startsWith('https://') || imgPath.startsWith('data:')) {
+        return imgPath;
+    }
+    const clean = imgPath.replace(/^\.\//, '').replace(/^\//, '');
+    return getAppPath(clean);
 }
 
 async function init() {
