@@ -303,6 +303,36 @@ function getRandomPastMonthArticle() {
 
 // Interactivity
 function setupInteractivity() {
+    // --- Dark / Light Mode Toggle ---
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    const iconMoon = document.getElementById('icon-moon');
+    const iconSun  = document.getElementById('icon-sun');
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('finsyntax_theme', theme);
+        if (theme === 'dark') {
+            if (iconMoon) iconMoon.style.display = 'none';
+            if (iconSun)  iconSun.style.display  = 'block';
+        } else {
+            if (iconMoon) iconMoon.style.display = 'block';
+            if (iconSun)  iconSun.style.display  = 'none';
+        }
+    }
+
+    // Sync icon on load
+    const savedTheme = localStorage.getItem('finsyntax_theme') ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
+
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        });
+    }
+
+    // --- Existing Interactivity ---
     const drawerFontDec = document.getElementById('drawer-font-dec');
     const drawerFontInc = document.getElementById('drawer-font-inc');
     if (drawerFontDec) drawerFontDec.addEventListener('click', () => adjustFontSize(-1));

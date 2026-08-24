@@ -115,6 +115,47 @@
 }
 
 /* =========================================
+   Dark Mode (Obsidian #0B0F19)
+   ========================================= */
+[data-theme="dark"] {
+  /* Colors that override :root in dark mode */
+  --color-primary: #10B981;
+  --color-primary-hover: #34D399;
+  --color-secondary: #818CF8;
+  --color-secondary-hover: #6366F1;
+
+  --color-accent-amber: #F59E0B;
+  --color-accent-rose: #F87171;
+  --color-accent-cyan: #38BDF8;
+
+  /* Backgrounds */
+  --color-bg-base:         #0B0F19;
+  --color-bg-surface:      #151C2C;
+  --color-bg-surface-hover:#1E293B;
+  --color-bg-article:      #111726;
+
+  /* Text */
+  --color-text-title:     #F8FAFC;
+  --color-text-body:      #E2E8F0;
+  --color-text-secondary: #CBD5E1;
+  --color-text-muted:     #94A3B8;
+
+  /* Borders — เพิ่ม opacity ให้เห็นขอบการ์ดชัดขึ้น */
+  --color-border:           rgba(255, 255, 255, 0.18);
+  --color-border-subtle:    rgba(255, 255, 255, 0.08);
+  --color-border-highlight: rgba(129, 140, 248, 0.50);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.40);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.50), 0 2px 4px -1px rgba(0, 0, 0, 0.30);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.60);
+  --shadow-glow-ai: 0 4px 20px rgba(129, 140, 248, 0.20);
+
+  --glass-bg:     rgba(21, 28, 44, 0.88);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================
    6. Responsive Overrides (Tablet & Desktop Readability)
    ========================================= */
 
