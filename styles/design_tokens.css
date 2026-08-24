@@ -88,7 +88,7 @@
   --space-16: 4rem;    /* 64px */
   
   --container-padding: var(--space-4); /* Mobile default */
-  --article-max-width: 720px; /* Optimal reading column width (50-75 characters/line) */
+  --article-max-width: 880px; /* Balanced desktop reading & layout width */
 
   /* =========================================
      4. Borders & Radius

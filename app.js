@@ -760,7 +760,7 @@ function renderRelatedCardsSection(relatedArticles) {
                     </div>
                     <div class="ad-box-content">
                       <div class="ad-box-header">
-                        <span class="ad-box-label" style="color: var(--color-primary);">${categoryInfo ? categoryInfo.label : 'ข่าวที่เกี่ยวข้อง'}</span>
+                        <span class="ad-box-label">${categoryInfo ? categoryInfo.label : 'ข่าวที่เกี่ยวข้อง'}</span>
                         <span class="ad-box-sponsor">${formatRelativeTime(a.date)}</span>
                       </div>
                       <h4 class="ad-box-title">${a.title}</h4>
@@ -923,13 +923,21 @@ async function renderStaticPage(pageName) {
         }
         
         const htmlContent = marked.parse(body);
+        const pageTitle = pageName === 'sponsor' ? 'แพ็กเกจสปอนเซอร์' : 'เกี่ยวกับเรา';
         mainContent.innerHTML = `
-        <div class="page-container" style="padding-top: var(--spacing-xl); padding-bottom: var(--spacing-xl);">
-            <div class="article-content">${htmlContent}</div>
-        </div>`;
+        <article class="article-page">
+            <div class="article-container">
+                <nav class="breadcrumb" aria-label="คุณอยู่ที่นี่">
+                    <a href="${getRouteUrl('/')}">หน้าหลัก</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-current">${pageTitle}</span>
+                </nav>
+                <div class="article-body article-content">${htmlContent}</div>
+            </div>
+        </article>`;
         scrollToTop();
     } catch (e) {
-        mainContent.innerHTML = `<div class="page-container"><h1>ไม่สามารถโหลดเนื้อหาได้</h1></div>`;
+        mainContent.innerHTML = `<div class="article-container"><h1>ไม่สามารถโหลดเนื้อหาได้</h1></div>`;
     }
 }
 
@@ -954,7 +962,7 @@ async function handleRoute() {
         const categoryArticles = articles.filter(a => a.category === parts[0]);
         mainContent.innerHTML = renderHomeView(categoryArticles, parts[0]);
         scrollToTop();
-    } else if (parts.length === 1 && parts[0] === 'about-us') {
+    } else if (parts.length === 1 && (parts[0] === 'about-us' || parts[0] === 'sponsor')) {
         // Static Page
         await renderStaticPage(parts[0]);
         scrollToTop();
