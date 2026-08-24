@@ -1103,10 +1103,29 @@ function getImageUrl(imgPath) {
     return getAppPath(clean);
 }
 
+function setupCookieBanner() {
+    const banner = document.getElementById('cookie-banner');
+    const acceptBtn = document.getElementById('accept-cookies');
+    
+    if (!banner || !acceptBtn) return;
+    
+    // Check if user has already accepted cookies
+    const cookieConsent = localStorage.getItem('finsyntax_cookie_consent');
+    if (!cookieConsent) {
+        banner.style.display = 'flex';
+    }
+    
+    acceptBtn.addEventListener('click', () => {
+        localStorage.setItem('finsyntax_cookie_consent', 'accepted');
+        banner.style.display = 'none';
+    });
+}
+
 async function init() {
     initFontSize();
     setupShell();
     setupInteractivity();
+    setupCookieBanner();
     
     try {
         const [articleResults, sponsorResults] = await Promise.all([
