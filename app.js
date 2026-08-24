@@ -520,7 +520,7 @@ function renderNativeAdCard(title, sponsor, readTime, image) {
                 <h3 class="card-title">${title}</h3>
                 <div class="card-meta">
                     <span class="sponsor-name">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-amber)" stroke-width="2" style="margin-right: 4px; vertical-align: middle;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-secondary)" stroke-width="2" style="margin-right: 4px; vertical-align: middle;">
                             <rect x="3" y="3" width="18" height="18" rx="2"></rect>
                             <path d="M9 12h6M9 8h6M9 16h3"></path>
                         </svg>

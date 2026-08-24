@@ -717,7 +717,7 @@
 .sponsor-name {
   font-family: var(--font-family-data);
   font-size: var(--text-xs);
-  color: var(--color-accent-amber);
+  color: var(--color-secondary);
   font-weight: var(--font-weight-semibold);
   display: flex;
   align-items: center;
@@ -889,17 +889,30 @@
   font-size: var(--text-xs);
   font-weight: var(--font-weight-semibold);
   white-space: nowrap;
+  letter-spacing: 0.01em;
 }
-.sentiment-bullish { background: rgba(5, 150, 105, 0.1); color: var(--color-primary); }
-.sentiment-neutral { background: rgba(79, 70, 229, 0.1); color: var(--color-secondary); }
-.sentiment-bearish { background: rgba(225, 29, 72, 0.1); color: var(--color-accent-rose); }
+.sentiment-bullish { 
+  background: rgba(16, 185, 129, 0.12); 
+  color: #059669; 
+  border: 1px solid rgba(16, 185, 129, 0.25); 
+}
+.sentiment-neutral { 
+  background: rgba(14, 165, 233, 0.12); 
+  color: #0284C7; 
+  border: 1px solid rgba(14, 165, 233, 0.25); 
+}
+.sentiment-bearish { 
+  background: rgba(244, 63, 94, 0.12); 
+  color: #E11D48; 
+  border: 1px solid rgba(244, 63, 94, 0.25); 
+}
 
 /* =========================================
    9. NATIVE ADS (Zero Ad Noise Light Mode)
    ========================================= */
 .news-card.native-ad {
-  border-color: rgba(217, 119, 6, 0.2);
-  background: #FFFDF9;
+  border-color: rgba(99, 102, 241, 0.25);
+  background: #F8F8FF;
 }
 .news-card.native-ad .news-card-link {
   cursor: default;
@@ -913,13 +926,13 @@
 
 /* In-Article Ad Box & Left Image Layout */
 .in-article-ad-box {
-  background: #FFFDF9;
-  border: 1px solid rgba(217, 119, 6, 0.22);
-  border-left: 4px solid var(--color-accent-amber);
+  background: #F8F8FF;
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  border-left: 4px solid var(--color-secondary);
   border-radius: var(--radius-md);
   padding: var(--space-4);
   margin: var(--space-6) 0;
-  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.08);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
 }
 
 .ad-box-inner {
@@ -976,16 +989,16 @@
   font-family: var(--font-family-heading);
   font-size: var(--text-xs);
   font-weight: var(--font-weight-semibold);
-  background: rgba(217, 119, 6, 0.12);
-  color: var(--color-accent-amber);
-  border: 1px solid rgba(217, 119, 6, 0.25);
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--color-secondary);
+  border: 1px solid rgba(99, 102, 241, 0.25);
   text-transform: uppercase;
 }
 .ad-box-sponsor {
   font-family: var(--font-family-data);
   font-size: var(--text-xs);
   font-weight: var(--font-weight-medium);
-  color: var(--color-accent-amber);
+  color: var(--color-secondary);
 }
 .ad-box-title {
   font-family: var(--font-family-heading);
@@ -1008,7 +1021,7 @@
   width: fit-content;
   gap: var(--space-1);
   padding: var(--space-2) var(--space-4);
-  background: var(--color-accent-amber);
+  background: var(--color-secondary);
   color: #FFFFFF;
   font-family: var(--font-family-heading);
   font-size: var(--text-sm);
@@ -1017,10 +1030,10 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background 0.2s ease;
-  box-shadow: 0 2px 6px rgba(217, 119, 6, 0.25);
+  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.25);
 }
 .ad-box-cta:hover {
-  background: #b45309;
+  background: var(--color-secondary-hover);
 }
 
 /* In-Article Related News Stack (Sponsored Card Style) */
@@ -1287,14 +1300,14 @@
 
 .article-body th,
 .article-content th {
-  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
   color: #FFFFFF;
   font-family: var(--font-family-heading);
   font-size: var(--text-sm);
   font-weight: var(--font-weight-semibold);
   text-align: left;
   padding: var(--space-3) var(--space-4);
-  border-bottom: 2px solid #047857;
+  border-bottom: 2px solid #059669;
   letter-spacing: 0.02em;
 }
 
