@@ -1,0 +1,134 @@
+/* FINSYNTAX Design Tokens
+   Mobile-First & Premium Light Mode (Soft Warm Slate) for Long-Form Financial News Reading */
+
+:root {
+  /* =========================================
+     1. Color Palette (Optimized High Contrast & Reduced Eye Strain)
+     ========================================= */
+  
+  /* Brand Colors */
+  --color-primary: #059669; /* Emerald Forest Green - Growth, Trust, High Contrast CTA */
+  --color-primary-hover: #047857;
+  --color-secondary: #4F46E5; /* Electric Indigo - AI & Market Insights */
+  --color-secondary-hover: #4338CA;
+  
+  /* Semantic Status & Accents */
+  --color-accent-amber: #D97706; /* Breaking News, Highlights, Warnings */
+  --color-accent-rose: #E11D48; /* Bearish, Negative, Danger */
+  --color-accent-cyan: #0891B2; /* Infographics, Tooltips */
+  
+  /* Backgrounds & Surfaces (Soft Warm Slate Light Mode - Prevents Glare & Eye Fatigue) */
+  --color-bg-base: #F8FAFC; /* Main Page Background (Soft Slate Pearl Off-White) */
+  --color-bg-surface: #FFFFFF; /* Cards, Elevate Surfaces, Elevated Widgets */
+  --color-bg-surface-hover: #F1F5F9; /* Hover & Interactive States */
+  --color-bg-article: #FFFFFF; /* Article Reading Container */
+  
+  /* Text & Contrast Hierarchy (Optimized for Reading Comfort - WCAG AAA Compliant) */
+  --color-text-title: #0F172A; /* Headings & Titles - Crisp Slate 900 */
+  --color-text-body: #334155; /* Article Body Text - Soft Slate 700 to prevent glare fatigue */
+  --color-text-secondary: #475569; /* Subtitles, Summaries (Slate 600) */
+  --color-text-muted: #64748B; /* Metadata, Dates, Captions (Slate 500) */
+  
+  /* Borders & Dividers */
+  --color-border: rgba(15, 23, 42, 0.12);
+  --color-border-subtle: rgba(15, 23, 42, 0.06);
+  --color-border-highlight: rgba(79, 70, 229, 0.35); /* AI Highlight Border */
+
+  /* =========================================
+     2. Typography System (Dual Font Pairing for Maximum Readability)
+     ========================================= */
+  
+  /* Headings, Badges, UI Navigation -> Modern loopless, high impact */
+  --font-family-heading: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  /* Long-form Article Body -> Ultra-legible for extended reading */
+  --font-family-body: 'IBM Plex Sans Thai', 'Prompt', sans-serif;
+  
+  /* Financial Numbers & English Data -> Tabular numbers & clear glyph distinction */
+  --font-family-data: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-feature-numeric: 'tnum' 1, 'cv05' 1; /* Enables tabular equal-width numbers */
+  
+  /* Mobile-First Font Scales */
+  --text-xs: 0.75rem;     /* 12px - Badges, Tags */
+  --text-sm: 0.875rem;    /* 14px - Meta info, Captions */
+  --text-base: 1rem;      /* 16px - Base Mobile Body Text */
+  --text-article: 1.0625rem; /* 17px - Optimized Body Text for Mobile Reading */
+  --text-lg: 1.1875rem;   /* 19px - Card Headlines */
+  --text-xl: 1.375rem;    /* 22px - Subheadings */
+  --text-2xl: 1.625rem;   /* 26px - Article Main Title Mobile */
+  --text-3xl: 2rem;       /* 32px - Section Headers Desktop */
+  --text-4xl: 2.5rem;     /* 40px - Main Hero Titles */
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line Heights & Letter Spacings (Reading Ergonomics) */
+  --line-height-heading: 1.3;
+  --line-height-body: 1.75; /* Generous spacing for comfortable Thai reading */
+  --line-height-tight: 1.25;
+  --letter-spacing-body: 0.012em;
+
+  /* =========================================
+     3. Spacing & Grid System
+     ========================================= */
+  
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.25rem;  /* 20px */
+  --space-6: 1.5rem;   /* 24px */
+  --space-8: 2rem;     /* 32px */
+  --space-10: 2.5rem;  /* 40px */
+  --space-12: 3rem;    /* 48px */
+  --space-16: 4rem;    /* 64px */
+  
+  --container-padding: var(--space-4); /* Mobile default */
+  --article-max-width: 720px; /* Optimal reading column width (50-75 characters/line) */
+
+  /* =========================================
+     4. Borders & Radius
+     ========================================= */
+  
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+
+  /* =========================================
+     5. Shadows & Glassmorphism Effects (Light Theme)
+     ========================================= */
+  
+  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -1px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 24px -4px rgba(15, 23, 42, 0.12);
+  --shadow-glow-ai: 0 4px 20px rgba(79, 70, 229, 0.12);
+  
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-blur: blur(16px);
+  --glass-border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+/* =========================================
+   6. Responsive Overrides (Tablet & Desktop Readability)
+   ========================================= */
+
+@media (min-width: 768px) {
+  :root {
+    --container-padding: var(--space-6);
+    --text-article: 1.125rem; /* 18px on Tablet/Desktop for enhanced legibility */
+    --text-2xl: 2rem;        /* 32px Title */
+    --text-3xl: 2.5rem;      /* 40px */
+    --text-4xl: 3.25rem;     /* 52px */
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --container-padding: var(--space-8);
+  }
+}
