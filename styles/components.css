@@ -889,20 +889,20 @@
 }
 
 .ad-box-image-wrapper {
-  width: 130px;
-  min-width: 130px;
-  align-self: stretch;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  flex-shrink: 0;
-  background: transparent;
-  padding: 0;
+  display: none;
 }
 
 @media (min-width: 640px) {
   .ad-box-image-wrapper {
-    width: 200px;
-    min-width: 200px;
+    display: block;
+    width: 160px;
+    min-width: 160px;
+    align-self: stretch;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: transparent;
+    padding: 0;
   }
 }
 
