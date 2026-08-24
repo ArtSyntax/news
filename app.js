@@ -992,7 +992,7 @@ async function handleRoute() {
         const categoryArticles = articles.filter(a => a.category === parts[0]);
         mainContent.innerHTML = renderHomeView(categoryArticles, parts[0]);
         scrollToTop();
-    } else if (parts.length === 1 && (parts[0] === 'about-us' || parts[0] === 'sponsor')) {
+    } else if (parts.length === 1 && (parts[0] === 'about-us' || parts[0] === 'sponsor' || parts[0] === 'privacy-policy' || parts[0] === 'terms-of-use')) {
         // Static Page
         await renderStaticPage(parts[0]);
         scrollToTop();
