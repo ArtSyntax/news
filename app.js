@@ -575,28 +575,34 @@ function renderGoogleAdCard(
     </article>`;
 }
 
-function renderGoogleInArticleAdBox() {
+function renderGoogleInArticleAdBox(
+  title = 'ข้อเสนอพิเศษและบริการทางการเงินสำหรับคุณ',
+  description = 'ค้นหาแผนการเงิน การลงทุน และสิทธิประโยชน์ที่ตอบโจทย์คุณผ่านเครือข่าย Google Ads',
+  sponsor = 'Google Ads',
+  ctaText = 'ดูรายละเอียด',
+  image = 'images/placeholder.jpg'
+) {
+  const imgSrc = getImageUrl(image);
   return `
-    <aside class="in-article-ad-box google-in-article-ad" aria-label="โฆษณา Google Ads">
+    <aside class="in-article-ad-box google-in-article-ad" aria-label="เนื้อหาสนับสนุน Google Ads">
       <div class="ad-box-inner">
         <div class="ad-box-image-wrapper">
-          <div class="google-ad-img-slot" style="width: 100%; height: 100%; min-height: 120px; background: var(--color-bg-surface-hover); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; overflow: hidden;">
-            <ins class="adsbygoogle"
-                 style="display:block; width:100%; height:100%; min-height:120px;"
-                 data-ad-format="fluid"
-                 data-ad-layout-key="-fb+5w+4e-db+86"
-                 data-ad-client="ca-pub-1191941271672621"
-                 data-ad-slot="1191941272"></ins>
-          </div>
+          <img src="${imgSrc}" alt="${title}" class="ad-box-img" loading="lazy" onerror="this.onerror=null; this.src='${getImageUrl('images/placeholder.jpg')}';" />
+          <ins class="adsbygoogle"
+               style="display:none;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-1191941271672621"
+               data-ad-slot="1191941272"></ins>
         </div>
         <div class="ad-box-content">
           <div class="ad-box-header">
             <span class="ad-box-label">Sponsored</span>
-            <span class="ad-box-sponsor">สนับสนุนโดย Google Ads</span>
+            <span class="ad-box-sponsor">สนับสนุนโดย ${sponsor}</span>
           </div>
-          <h4 class="ad-box-title">ข้อเสนอพิเศษและเนื้อหาที่น่าสนใจสำหรับคุณ</h4>
-          <p class="ad-box-desc">ค้นหาข้อมูลและข้อเสนอทางการเงินจากผู้สนับสนุนผ่านระบบ Google Ads</p>
-          <span class="ad-box-cta" style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">ดูรายละเอียด →</span>
+          <h4 class="ad-box-title">${title}</h4>
+          <p class="ad-box-desc">${description}</p>
+          <button class="ad-box-cta">${ctaText} →</button>
         </div>
       </div>
     </aside>
@@ -785,7 +791,7 @@ function renderHomeView(articlesToRender, currentCategory = null) {
 }
 
 function renderNativeAdBox(
-  title = '💡 แนะนำสำหรับคุณ',
+  title = 'แนะนำสำหรับคุณ',
   description = 'เปรียบเทียบประกันชีวิตสะสมทรัพย์ ผลตอบแทนสูงสุด 3.5% ต่อปี กับแผนที่ใช่สำหรับคุณ',
   sponsor = 'เมืองไทยประกันชีวิต',
   ctaText = 'ดูรายละเอียด',
