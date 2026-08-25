@@ -537,6 +537,87 @@ function renderNewsCard(article, featured = false) {
     </article>`;
 }
 
+function renderGoogleAdCard(
+    title = 'ข้อเสนอพิเศษและบริการทางการเงินที่เหมาะกับคุณ',
+    sponsor = 'Google Ads',
+    readTime = '2 นาที',
+    image = 'images/placeholder.jpg'
+) {
+    const bgImage = `url('${getImageUrl(image)}')`;
+    return `
+    <article class="news-card native-ad google-ad-card">
+        <div class="news-card-link" style="cursor: pointer;">
+            <div class="card-image-wrapper">
+                <div class="card-image" style="background-image: ${bgImage}; position: relative; overflow: hidden;" role="img" aria-label="${title}">
+                    <ins class="adsbygoogle"
+                         style="display:block; width:100%; height:100%; position:absolute; top:0; left:0;"
+                         data-ad-format="fluid"
+                         data-ad-layout-key="-fb+5w+4e-db+86"
+                         data-ad-client="ca-pub-1191941271672621"
+                         data-ad-slot="1191941271"></ins>
+                </div>
+                <span class="badge-category badge-sponsored">Sponsored</span>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">${title}</h3>
+                <div class="card-meta">
+                    <span class="sponsor-name">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-secondary)" stroke-width="2" style="margin-right: 4px; vertical-align: middle;">
+                            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                            <path d="M9 12h6M9 8h6M9 16h3"></path>
+                        </svg>
+                        ${sponsor}
+                    </span>
+                    <span class="read-time">• อ่าน ${readTime}</span>
+                </div>
+            </div>
+        </div>
+    </article>`;
+}
+
+function renderGoogleInArticleAdBox() {
+  return `
+    <aside class="in-article-ad-box google-in-article-ad" aria-label="โฆษณา Google Ads">
+      <div class="ad-box-inner">
+        <div class="ad-box-image-wrapper">
+          <div class="google-ad-img-slot" style="width: 100%; height: 100%; min-height: 120px; background: var(--color-bg-surface-hover); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+            <ins class="adsbygoogle"
+                 style="display:block; width:100%; height:100%; min-height:120px;"
+                 data-ad-format="fluid"
+                 data-ad-layout-key="-fb+5w+4e-db+86"
+                 data-ad-client="ca-pub-1191941271672621"
+                 data-ad-slot="1191941272"></ins>
+          </div>
+        </div>
+        <div class="ad-box-content">
+          <div class="ad-box-header">
+            <span class="ad-box-label">Sponsored</span>
+            <span class="ad-box-sponsor">สนับสนุนโดย Google Ads</span>
+          </div>
+          <h4 class="ad-box-title">ข้อเสนอพิเศษและเนื้อหาที่น่าสนใจสำหรับคุณ</h4>
+          <p class="ad-box-desc">ค้นหาข้อมูลและข้อเสนอทางการเงินจากผู้สนับสนุนผ่านระบบ Google Ads</p>
+          <span class="ad-box-cta" style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">ดูรายละเอียด →</span>
+        </div>
+      </div>
+    </aside>
+  `;
+}
+
+function initGoogleAds() {
+    try {
+        if (typeof window !== 'undefined') {
+            const ads = document.querySelectorAll('.adsbygoogle:not([data-adsbygoogle-status])');
+            if (ads.length > 0) {
+                ads.forEach(() => {
+                    (window.adsbygoogle = window.adsbygoogle || []).push({});
+                });
+            }
+        }
+    } catch (e) {
+        // Suppress benign ad blocker/network errors in development
+    }
+}
+
 function renderNativeAdCard(title, sponsor, readTime, image) {
     const bgImage = image ? `url('${getImageUrl(image)}')` : `url('${getImageUrl('images/placeholder.jpg')}')`;
     return `
@@ -646,37 +727,45 @@ function renderHomeView(articlesToRender, currentCategory = null) {
         )
         .sort(sortSponsors);
     
-    let gridHtml = '';
+    let gridCards = [];
     const renderedSponsors = new Set();
     
     gridArticles.forEach((article, index) => {
-        gridHtml += renderNewsCard(article);
+        gridCards.push(renderNewsCard(article));
         
-        // Position index in grid (1-based index)
-        const pos = index + 1;
+        const pos = gridCards.length;
         
-        // 1. Find sponsor matching exact feedPosition that has not been rendered yet
+        // Find sponsor matching exact feedPosition for this category that has not been rendered yet
         const posMatchedSponsor = activeFeedSponsors.find(s => s.feedPosition === pos && !renderedSponsors.has(s.id || s.title));
         if (posMatchedSponsor) {
             renderedSponsors.add(posMatchedSponsor.id || posMatchedSponsor.title);
-            gridHtml += renderNativeAdCard(posMatchedSponsor.title, posMatchedSponsor.sponsor, posMatchedSponsor.readTime || '2 นาที', posMatchedSponsor.image);
-        } else if (pos % 3 === 0 || pos === gridArticles.length) {
-            // 2. Fallback to remaining active sponsors that haven't been shown
+            gridCards.push(renderNativeAdCard(posMatchedSponsor.title, posMatchedSponsor.sponsor, posMatchedSponsor.readTime || '2 นาที', posMatchedSponsor.image));
+        } else if ((pos === 3 || pos === 9)) {
             const remainingSponsors = activeFeedSponsors.filter(s => !renderedSponsors.has(s.id || s.title));
             if (remainingSponsors.length > 0) {
                 const adData = remainingSponsors[0];
                 renderedSponsors.add(adData.id || adData.title);
-                gridHtml += renderNativeAdCard(adData.title, adData.sponsor, adData.readTime || '2 นาที', adData.image);
+                gridCards.push(renderNativeAdCard(adData.title, adData.sponsor, adData.readTime || '2 นาที', adData.image));
             }
         }
     });
 
-    // 3. Ensure any remaining active feed sponsors matching current category are rendered
+    // Ensure any remaining active feed sponsors matching current category are added
     const unrenderedSponsors = activeFeedSponsors.filter(s => !renderedSponsors.has(s.id || s.title));
     unrenderedSponsors.forEach(adData => {
         renderedSponsors.add(adData.id || adData.title);
-        gridHtml += renderNativeAdCard(adData.title, adData.sponsor, adData.readTime || '2 นาที', adData.image);
+        gridCards.push(renderNativeAdCard(adData.title, adData.sponsor, adData.readTime || '2 นาที', adData.image));
     });
+
+    // Google Ads: Place at Position 6 (index 5) across every category; if fewer than 6, place at the very end
+    const googleAdCard = renderGoogleAdCard();
+    if (gridCards.length >= 5) {
+        gridCards.splice(5, 0, googleAdCard);
+    } else {
+        gridCards.push(googleAdCard);
+    }
+
+    const gridHtml = gridCards.join('');
 
     return `
         <section class="hero-section" aria-label="ข่าวเด่น">
@@ -934,14 +1023,35 @@ async function renderArticleView(category, slug) {
                         }
                         
                         const relatedArticles = getRelatedArticles(articleMeta);
-                        
-                        const sponsor1 = sponsorCards[0] || '';
-                        const news1 = relatedArticles.length > 0 ? renderRelatedCardsSection([relatedArticles[0]]) : '';
-                        
-                        const remainingSponsors = sponsorCards.length > 1 ? sponsorCards.slice(1).join('') : '';
-                        const remainingNews = relatedArticles.length > 1 ? renderRelatedCardsSection(relatedArticles.slice(1)) : '';
-                        
-                        return sponsor1 + news1 + remainingSponsors + remainingNews;
+                        const relatedCards = relatedArticles.map(a => renderRelatedCardsSection([a]));
+
+                        // Card 1: Sponsor 1
+                        const card1 = sponsorCards[0] || '';
+
+                        // Card 2: Related News 1
+                        const card2 = relatedCards[0] || '';
+
+                        // Card 3: Sponsor 2 (if available) OR Related News 2
+                        let card3 = '';
+                        let sponsorIndex = 1;
+                        let relatedIndex = 1;
+
+                        if (sponsorCards.length > 1) {
+                            card3 = sponsorCards[1];
+                            sponsorIndex = 2;
+                        } else if (relatedCards.length > 1) {
+                            card3 = relatedCards[1];
+                            relatedIndex = 2;
+                        }
+
+                        // Card 4: Google Ads ALWAYS at Position 4
+                        const card4 = renderGoogleInArticleAdBox();
+
+                        // Remaining cards (Position 5+)
+                        const remainingSponsors = sponsorCards.slice(sponsorIndex).join('');
+                        const remainingRelated = relatedCards.slice(relatedIndex).join('');
+
+                        return card1 + card2 + card3 + card4 + remainingSponsors + remainingRelated;
                     })()}
                     ${contentParts.after}
                 </div>
@@ -1180,6 +1290,8 @@ async function handleRoute() {
         mainContent.innerHTML = render404View();
         scrollToTop();
     }
+
+    initGoogleAds();
 }
 
 // Initialization

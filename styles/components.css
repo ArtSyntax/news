@@ -966,6 +966,13 @@
   box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
 }
 
+.google-ad-card {
+  /* Inherits exact news-card native-ad styling and dimensions */
+}
+.google-in-article-ad {
+  /* Matches exact in-article-ad-box layout and styling */
+}
+
 .ad-box-inner {
   display: flex;
   flex-direction: row;
