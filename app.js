@@ -842,6 +842,28 @@ async function renderArticleView(category, slug) {
         const categoryInfo = getCategoryBySlug(articleMeta.category);
         const contentParts = splitContentForAd(htmlContent);
 
+        const fullImageUrl = articleMeta.image ? 
+            (articleMeta.image.startsWith('http') ? articleMeta.image : `${BASE_URL}/${articleMeta.image.replace(/^\.?\//, '')}`) : 
+            DEFAULT_IMAGE;
+        const cleanExcerpt = articleMeta.summary || articleMeta.excerpt || (articleMeta.description || articleMeta.title);
+
+        updateSEO({
+            title: articleMeta.title,
+            description: cleanExcerpt,
+            image: fullImageUrl,
+            url: `${BASE_URL}/${category}/${slug}`,
+            type: 'article',
+            articleData: {
+                ...articleMeta,
+                categoryLabel: categoryInfo ? categoryInfo.label : category
+            },
+            breadcrumbs: [
+                { name: 'หน้าหลัก', url: '/' },
+                { name: categoryInfo ? categoryInfo.label : category, url: `/${category}` },
+                { name: articleMeta.title, url: `/${category}/${slug}` }
+            ]
+        });
+
         const formattedDate = new Date(articleMeta.date).toLocaleDateString('th-TH', {
             year: 'numeric',
             month: 'long',
@@ -936,6 +958,119 @@ async function renderArticleView(category, slug) {
     }
 }
 
+// =========================================
+// SEO & Dynamic Meta Tags Manager
+// =========================================
+const SITE_NAME = 'FinFeed NEWS';
+const BASE_URL = 'https://finfeednews.com';
+const DEFAULT_IMAGE = `${BASE_URL}/images/finfeednews_logo.png`;
+const DEFAULT_DESCRIPTION = 'FinFeed NEWS - แพลตฟอร์มข่าวการเงินอัจฉริยะสำหรับนักลงทุนรุ่นใหม่ อัปเดตข่าวหุ้น เศรษฐกิจ ธุรกิจ ประกัน และ ESG แบบเรียลไทม์ พร้อม AI Copilot สรุปข่าวให้เข้าใจง่าย';
+
+function updateSEO({
+    title = '',
+    description = DEFAULT_DESCRIPTION,
+    image = DEFAULT_IMAGE,
+    url = BASE_URL,
+    type = 'website',
+    articleData = null,
+    breadcrumbs = []
+} = {}) {
+    const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} | ข่าวการเงินอัจฉริยะ`;
+    document.title = fullTitle;
+
+    const setMeta = (selector, attr, value) => {
+        let el = document.querySelector(selector);
+        if (el && value) el.setAttribute(attr, value);
+    };
+
+    setMeta('meta[name="description"]', 'content', description);
+    setMeta('meta[name="author"]', 'content', articleData ? (articleData.author || SITE_NAME) : SITE_NAME);
+
+    const canonicalEl = document.getElementById('canonical-url');
+    if (canonicalEl) canonicalEl.setAttribute('href', url);
+
+    setMeta('meta[property="og:title"]', 'content', fullTitle);
+    setMeta('meta[property="og:description"]', 'content', description);
+    setMeta('meta[property="og:image"]', 'content', image);
+    setMeta('meta[property="og:url"]', 'content', url);
+    setMeta('meta[property="og:type"]', 'content', type);
+
+    setMeta('meta[name="twitter:title"]', 'content', fullTitle);
+    setMeta('meta[name="twitter:description"]', 'content', description);
+    setMeta('meta[name="twitter:image"]', 'content', image);
+
+    const jsonLdScript = document.getElementById('seo-json-ld');
+    if (jsonLdScript) {
+        const schemaGraph = [
+            {
+                "@type": "NewsMediaOrganization",
+                "@id": `${BASE_URL}/#organization`,
+                "name": SITE_NAME,
+                "url": `${BASE_URL}/`,
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": `${BASE_URL}/images/finfeednews_logo.png`
+                }
+            }
+        ];
+
+        if (articleData) {
+            schemaGraph.push({
+                "@type": "NewsArticle",
+                "@id": `${url}#article`,
+                "isPartOf": {
+                    "@type": "WebPage",
+                    "@id": url
+                },
+                "headline": articleData.title,
+                "description": description,
+                "image": [image],
+                "datePublished": articleData.date ? new Date(articleData.date).toISOString() : new Date().toISOString(),
+                "dateModified": articleData.date ? new Date(articleData.date).toISOString() : new Date().toISOString(),
+                "mainEntityOfPage": url,
+                "articleSection": articleData.categoryLabel || articleData.category,
+                "keywords": (articleData.tags || []).join(', '),
+                "author": {
+                    "@type": "Person",
+                    "name": articleData.author || 'ทีมข่าว FinFeed NEWS'
+                },
+                "publisher": {
+                    "@id": `${BASE_URL}/#organization`
+                }
+            });
+        } else {
+            schemaGraph.push({
+                "@type": "WebSite",
+                "@id": `${BASE_URL}/#website`,
+                "url": `${BASE_URL}/`,
+                "name": SITE_NAME,
+                "description": DEFAULT_DESCRIPTION,
+                "publisher": {
+                    "@id": `${BASE_URL}/#organization`
+                },
+                "inLanguage": "th-TH"
+            });
+        }
+
+        if (breadcrumbs && breadcrumbs.length > 0) {
+            schemaGraph.push({
+                "@type": "BreadcrumbList",
+                "itemListElement": breadcrumbs.map((b, idx) => ({
+                    "@type": "ListItem",
+                    "position": idx + 1,
+                    "name": b.name,
+                    "item": b.url.startsWith('http') ? b.url : `${BASE_URL}${b.url}`
+                }))
+            });
+        }
+
+        jsonLdScript.textContent = JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": schemaGraph
+        }, null, 2);
+    }
+}
+
 // Router
 async function renderStaticPage(pageName) {
     mainContent.innerHTML = `<div class="page-container"><p>กำลังโหลด...</p></div>`;
@@ -954,9 +1089,20 @@ async function renderStaticPage(pageName) {
         
         const htmlContent = marked.parse(body);
         let pageTitle = 'เกี่ยวกับเรา';
-        if (pageName === 'sponsor') pageTitle = 'แพ็กเกจสปอนเซอร์';
-        else if (pageName === 'privacy-policy') pageTitle = 'นโยบายความเป็นส่วนตัว';
-        else if (pageName === 'terms-of-use') pageTitle = 'เงื่อนไขการใช้งาน';
+        if (pageName === 'sponsor') pageTitle = 'แพ็กเกจสปอนเซอร์และลงโฆษณา';
+        else if (pageName === 'privacy-policy') pageTitle = 'นโยบายความเป็นส่วนตัว (Privacy Policy)';
+        else if (pageName === 'terms-of-use') pageTitle = 'ข้อกำหนดและเงื่อนไขการใช้งาน (Terms of Use)';
+
+        updateSEO({
+            title: pageTitle,
+            description: `${pageTitle} - สำนักข่าวการเงินอัจฉริยะ FinFeed NEWS`,
+            url: `${BASE_URL}/${pageName}`,
+            type: 'website',
+            breadcrumbs: [
+                { name: 'หน้าหลัก', url: '/' },
+                { name: pageTitle, url: `/${pageName}` }
+            ]
+        });
 
         mainContent.innerHTML = `
         <article class="article-page">
@@ -989,11 +1135,31 @@ async function handleRoute() {
 
     if (parts.length === 0) {
         // Home
+        updateSEO({
+            title: '',
+            description: DEFAULT_DESCRIPTION,
+            url: `${BASE_URL}/`,
+            type: 'website',
+            breadcrumbs: [
+                { name: 'หน้าหลัก', url: '/' }
+            ]
+        });
         mainContent.innerHTML = renderHomeView(articles);
         scrollToTop();
     } else if (parts.length === 1 && CATEGORIES[parts[0]]) {
         // Category Page
+        const catInfo = CATEGORIES[parts[0]];
         const categoryArticles = articles.filter(a => a.category === parts[0]);
+        updateSEO({
+            title: `ข่าว${catInfo.label}`,
+            description: `ติดตามข่าวสารล่าสุดและบทวิเคราะห์ด้าน${catInfo.label} อัปเดตเรียลไทม์จาก FinFeed NEWS`,
+            url: `${BASE_URL}/${parts[0]}`,
+            type: 'website',
+            breadcrumbs: [
+                { name: 'หน้าหลัก', url: '/' },
+                { name: catInfo.label, url: `/${parts[0]}` }
+            ]
+        });
         mainContent.innerHTML = renderHomeView(categoryArticles, parts[0]);
         scrollToTop();
     } else if (parts.length === 1 && (parts[0] === 'about-us' || parts[0] === 'sponsor' || parts[0] === 'privacy-policy' || parts[0] === 'terms-of-use')) {
@@ -1005,6 +1171,12 @@ async function handleRoute() {
         await renderArticleView(parts[0], parts[1]);
         scrollToTop();
     } else {
+        updateSEO({
+            title: 'ไม่พบหน้าที่ต้องการ (404 Not Found)',
+            description: 'ขออภัย ไม่พบหน้าที่คุณกำลังค้นหาบน FinFeed NEWS',
+            url: `${BASE_URL}/404`,
+            type: 'website'
+        });
         mainContent.innerHTML = render404View();
         scrollToTop();
     }
