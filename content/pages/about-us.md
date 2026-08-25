@@ -4,7 +4,7 @@ slug: "about-us"
 date: "2026-08-20"
 ---
 
-# เกี่ยวกับ <span class="logo-brand">FinFeed</span> <span class="logo-news">NEWS</span>
+# เกี่ยวกับ <span class="logo-text">FinFeed NEWS</span>
 
 FinFeed NEWS (ฟินฟีด นิวส์) เป็นสำนักข่าวการเงินออนไลน์ที่มุ่งเน้นการนำเสนอข้อมูลข่าวสารด้านเศรษฐกิจ ตลาดทุน และความเคลื่อนไหวทางธุรกิจทั้งในและต่างประเทศ ด้วยความรวดเร็ว แม่นยำ และเป็นกลาง
 

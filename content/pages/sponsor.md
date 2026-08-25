@@ -5,7 +5,7 @@ date: "2026-08-24"
 ---
 
 # โครงสร้างแพ็กเกจการขายสปอนเซอร์ (Sponsor Packages & Monetization)
-### <span class="logo-brand">FinFeed</span> <span class="logo-news">NEWS</span> — แพลตฟอร์มข่าวการเงินและการลงทุนสำหรับนักลงทุนรุ่นใหม่
+### <span class="logo-text">FinFeed NEWS</span> — แพลตฟอร์มข่าวการเงินและการลงทุนสำหรับนักลงทุนรุ่นใหม่
 
 ---
 

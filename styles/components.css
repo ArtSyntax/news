@@ -107,15 +107,22 @@
   font-family: var(--font-family-heading);
   font-weight: var(--font-weight-bold);
   font-size: var(--text-lg);
-  color: var(--color-text-title);
   letter-spacing: 0.03em;
   position: relative;
+  background: linear-gradient(90deg, #10B981 0%, #10B981 40%, #6366F1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+  white-space: nowrap;
 }
-.logo-brand {
-  color: var(--color-primary);
-}
+.logo-brand,
 .logo-news {
-  color: var(--color-secondary);
+  color: inherit;
+  -webkit-text-fill-color: inherit;
+  background: inherit;
+  -webkit-background-clip: inherit;
+  background-clip: inherit;
 }
 
 /* Desktop Navigation */
