@@ -1,11 +1,11 @@
 ---
-title: "แพ็กเกจสปอนเซอร์ - FINSYNTAX"
+title: "แพ็กเกจสปอนเซอร์ - FinFeed NEWS"
 slug: "sponsor"
 date: "2026-08-24"
 ---
 
 # โครงสร้างแพ็กเกจการขายสปอนเซอร์ (Sponsor Packages & Monetization)
-### FINSYNTAX — แพลตฟอร์มข่าวการเงินและการลงทุนสำหรับนักลงทุนรุ่นใหม่
+### <span class="logo-brand">FinFeed</span> <span class="logo-news">NEWS</span> — แพลตฟอร์มข่าวการเงินและการลงทุนสำหรับนักลงทุนรุ่นใหม่
 
 ---
 

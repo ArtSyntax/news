@@ -206,7 +206,7 @@ function parseRoutePath() {
 
 // Layout Setup
 function setupShell() {
-    desktopNav.innerHTML = NAV_ITEMS.map(item => 
+    desktopNav.innerHTML = NAV_ITEMS.filter(item => item.href !== '/about-us').map(item => 
         `<a href="${getRouteUrl(item.href)}" class="nav-link">${item.label}</a>`
     ).join('');
 
@@ -310,7 +310,7 @@ function setupInteractivity() {
 
     function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('finsyntax_theme', theme);
+        localStorage.setItem('finfeed_theme', theme);
         if (theme === 'dark') {
             if (iconMoon) iconMoon.style.display = 'none';
             if (iconSun)  iconSun.style.display  = 'block';
@@ -321,7 +321,7 @@ function setupInteractivity() {
     }
 
     // Sync icon on load
-    const savedTheme = localStorage.getItem('finsyntax_theme') ||
+    const savedTheme = localStorage.getItem('finfeed_theme') || localStorage.getItem('finsyntax_theme') ||
         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     applyTheme(savedTheme);
 
@@ -577,7 +577,7 @@ function renderAISummaryBox(summaryPoints = [], sentiment = 'neutral') {
                 <svg class="ai-sparkle-icon" width="16" height="16" viewBox="0 0 24 24" fill="var(--color-secondary)">
                     <path d="M12 2L14.09 8.26L20 9.27L15.55 13.97L16.91 20L12 16.9L7.09 20L8.45 13.97L4 9.27L9.91 8.26L12 2Z"></path>
                 </svg>
-                FINSYNTAX AI Copilot Summary
+                FinFeed NEWS AI Copilot Summary
             </span>
             <span class="sentiment-badge ${sentimentInfo.className}">${sentimentInfo.label}</span>
         </div>
@@ -953,7 +953,11 @@ async function renderStaticPage(pageName) {
         }
         
         const htmlContent = marked.parse(body);
-        const pageTitle = pageName === 'sponsor' ? 'แพ็กเกจสปอนเซอร์' : 'เกี่ยวกับเรา';
+        let pageTitle = 'เกี่ยวกับเรา';
+        if (pageName === 'sponsor') pageTitle = 'แพ็กเกจสปอนเซอร์';
+        else if (pageName === 'privacy-policy') pageTitle = 'นโยบายความเป็นส่วนตัว';
+        else if (pageName === 'terms-of-use') pageTitle = 'เงื่อนไขการใช้งาน';
+
         mainContent.innerHTML = `
         <article class="article-page">
             <div class="article-container">
@@ -1103,10 +1107,29 @@ function getImageUrl(imgPath) {
     return getAppPath(clean);
 }
 
+function setupCookieBanner() {
+    const banner = document.getElementById('cookie-banner');
+    const acceptBtn = document.getElementById('accept-cookies');
+    
+    if (!banner || !acceptBtn) return;
+    
+    // Check if user has already accepted cookies
+    const cookieConsent = localStorage.getItem('finfeed_cookie_consent') || localStorage.getItem('finsyntax_cookie_consent');
+    if (!cookieConsent) {
+        banner.style.display = 'flex';
+    }
+    
+    acceptBtn.addEventListener('click', () => {
+        localStorage.setItem('finfeed_cookie_consent', 'accepted');
+        banner.style.display = 'none';
+    });
+}
+
 async function init() {
     initFontSize();
     setupShell();
     setupInteractivity();
+    setupCookieBanner();
     
     try {
         const [articleResults, sponsorResults] = await Promise.all([
