@@ -646,6 +646,8 @@
   border-left: 4px solid var(--color-primary);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+  content-visibility: auto;
+  contain-intrinsic-size: 0 350px;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.3s ease,
               border-color 0.3s ease;
@@ -673,6 +675,8 @@
 .card-image {
   width: 100%;
   aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
   background-size: cover;
   background-position: center;
   background-color: var(--color-bg-surface-hover);

@@ -513,13 +513,19 @@ function setupInteractivity() {
 function renderNewsCard(article, featured = false) {
     const category = getCategoryBySlug(article.category);
     const sentiment = getSentimentInfo(article.sentiment);
-    const bgImage = article.image ? `url('${getImageUrl(article.image)}')` : 'linear-gradient(135deg, var(--color-bg-surface) 0%, var(--color-bg-surface-hover) 100%)';
+    const imgSrc = getImageUrl(article.image || 'images/placeholder.jpg');
     
     return `
     <article class="news-card ${featured ? 'featured' : ''}">
         <a href="${getRouteUrl('/' + article.category + '/' + article.slug)}" class="news-card-link" aria-label="${article.title}">
             <div class="card-image-wrapper">
-                <div class="card-image" style="background-image: ${bgImage};" role="img" aria-label="${article.title}"></div>
+                <img src="${imgSrc}" 
+                     alt="${article.title}" 
+                     class="card-image" 
+                     loading="${featured ? 'eager' : 'lazy'}" 
+                     fetchpriority="${featured ? 'high' : 'auto'}" 
+                     decoding="async" 
+                     onerror="this.onerror=null; this.src='${getImageUrl('images/placeholder.jpg')}';" />
                 ${category ? `<span class="badge-category ${category.badgeClass}">${category.label}</span>` : ''}
             </div>
             <div class="card-content">
